@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Parrot String</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Parrot String</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../html/index.html">Contents</a> | <a href="../../../html/perl.html">Perl Modules</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="NAME"
+>NAME <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>Parrot::String &#45; Parrot String</p>
+
+<h1><a name="SYNOPSIS"
+>SYNOPSIS <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<pre lang='und' xml:lang='und'>  use Parrot::String;</pre>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p><code lang='und' xml:lang='und'>Parrot::String</code> represents a Parrot string.</p>
+
+<h2><a name="Class_Methods"
+>Class Methods <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="new($flags,_$encoding,_$type,_$size,_$data)"
+><b><code lang='und' xml:lang='und'>new($flags, $encoding, $type, $size, $data)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns a new instance of <code lang='und' xml:lang='und'>Parrot::String</code>.</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="Instance_Methods"
+>Instance Methods <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="flags($flags)"
+><b><code lang='und' xml:lang='und'>flags($flags)</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="flags()"
+><b><code lang='und' xml:lang='und'>flags()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets/gets the string&#39;s flags.</dd><p class="pad"></p>
+
+<dt><a name="encoding($encoding)"
+><b><code lang='und' xml:lang='und'>encoding($encoding)</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="encoding()"
+><b><code lang='und' xml:lang='und'>encoding()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets/gets the string&#39;s encoding.</dd><p class="pad"></p>
+
+<dt><a name="type($type)"
+><b><code lang='und' xml:lang='und'>type($type)</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="type()"
+><b><code lang='und' xml:lang='und'>type()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets/gets the string&#39;s type.</dd><p class="pad"></p>
+
+<dt><a name="size($size)"
+><b><code lang='und' xml:lang='und'>size($size)</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="size()"
+><b><code lang='und' xml:lang='und'>size()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets/gets the string&#39;s size.</dd><p class="pad"></p>
+
+<dt><a name="data($data)"
+><b><code lang='und' xml:lang='und'>data($data)</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="data()"
+><b><code lang='und' xml:lang='und'>data()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets/gets the string&#39;s data.</dd><p class="pad"></p>
+
+<dt><a name="unpack($string)"
+><b><code lang='und' xml:lang='und'>unpack($string)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpack from the string and return the number of characters that should be removed from the packed string.</dd><p class="pad"></p>
+
+<dt><a name="packed_size()"
+><b><code lang='und' xml:lang='und'>packed_size()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the packed size of the string.</dd><p class="pad"></p>
+
+<dt><a name="pack()"
+><b><code lang='und' xml:lang='und'>pack()</b></code></a></dt><p class="pad"></p>
+
+<dd>Packs the string.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="SEE_ALSO"
+>SEE ALSO <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="Parrot::Types"
+><b><code lang='und' xml:lang='und'><a href='Types.pm.html'>Parrot::Types</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::Key"
+><b><code lang='und' xml:lang='und'><a href='Key.pm.html'>Parrot::Key</a></b></code></a></dt><p class="pad"></p>
+</dl>
+
+<h1><a name="HISTORY"
+>HISTORY <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>Author: Gregor N. Purdy &#60;gregor@focusresearch.com&#62;</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

@@ -1,0 +1,339 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>NCI conventions and definitions</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">NCI conventions and definitions</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../html/index.html">Contents</a> | <a href="../../../html/docs.html">Documentation</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="NAME"
+>NAME <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>docs/pdds/pdd16_native_call.pod &#45; NCI conventions and definitions</p>
+
+<h1><a name="ABSTRACT"
+>ABSTRACT <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>This PDD describes the native call interface,
+and the function signatures used to describe those functions.</p>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>The NCI is designed to allow Parrot to interface to <i>most</i> of the functions in a C library without having to write any C code for that interface.
+It isn&#39;t designed to be a universal C&#45;less interface&#45;&#45;there will always be libraries that have some bizarre parameter list that requires that some C be written.
+It should,
+however,
+handle all the simple cases.</p>
+
+<p>Using the NCI,
+parrot automatically wraps the C functions and presents them as prototyped subroutines that follow normal parrot calling conventions,
+and can be called like any other parrot subroutine.</p>
+
+<p>The NCI uses the platform native dynamic by&#45;name function loading mechanism (dlopen/dlsym on unix and LoadLibrary/GetProcAddress on Win32,
+for example) to get the function pointer,
+then dynamically generates the wrapper based on the signature of that function.</p>
+
+<p>As there is no good platform&#45;independent way to determine function signatures (C header files are not always available (certainly not for libraries not designed for access from C) and not always reasonably parseable anyway,
+and there is no generic way to query a function for its signature) the signature must be passed in when the linkage between the C function and parrot is made.</p>
+
+<h2><a name="Function_signatures"
+>Function signatures <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<p>The following list are the valid letters in the function signatures for Parrot&#39;s NCI.
+Note that only letters and numbers are valid,
+and each letter represents a single parameter passed into the NCI.
+Note that the letters are case&#45;sensitive,
+and must be within the base 7&#45;bit ASCII character set.</p>
+
+<p>At some point punctuation may be used as modifiers on the function parameters,
+in which case each parameter may be represented by multiple letters.</p>
+
+<p>In <i>no</i> case should the signature letters be separated by whitespace.
+This restriction may be lifted in the future,
+but for now remains as an avenue for adding additional functionality.</p>
+
+<dl>
+<dt><a name="v"
+>v</a></dt><p class="pad"></p>
+
+<dd>Void.
+As a return type indicates that there <i>is</i> no return type.
+As a parameter indicates that there are no parameters.
+Can&#39;t be mixed with other parameter types.</dd><p class="pad"></p>
+
+<dt><a name="c"
+>c</a></dt><p class="pad"></p>
+
+<dd>Char.
+This is an integer type,
+taken from (or put into) an I register.
+NOTE: it might be signed or unsigned because that is how an unadorned C &#39;char&#39; works.</dd><p class="pad"></p>
+
+<dt><a name="s"
+>s</a></dt><p class="pad"></p>
+
+<dd>short.
+An integer type,
+taken from or put into an I register.
+It is always signed,
+not unsigned.</dd><p class="pad"></p>
+
+<dt><a name="i"
+>i</a></dt><p class="pad"></p>
+
+<dd>int.
+An integer type.
+It is always signed,
+not unsigned.</dd><p class="pad"></p>
+
+<dt><a name="l"
+>l</a></dt><p class="pad"></p>
+
+<dd>long.
+An integer type.
+You know the drill.
+It is always signed,
+not unsigned.</dd><p class="pad"></p>
+
+<dt><a name="f"
+>f</a></dt><p class="pad"></p>
+
+<dd>float.
+F register denizen.</dd><p class="pad"></p>
+
+<dt><a name="d"
+>d</a></dt><p class="pad"></p>
+
+<dd>double.
+F register,
+double&#45;precision floating point type</dd><p class="pad"></p>
+
+<dt><a name="P"
+>P</a></dt><p class="pad"></p>
+
+<dd>A PMC register.</dd><p class="pad"></p>
+
+<dt><a name="p"
+>p</a></dt><p class="pad"></p>
+
+<dd>PMC thingie.
+A generic pointer,
+taken from or stuck into a PMC&#39;s data pointer.
+If this is a return type,
+parrot will create a new UnManagedStruct PMC type,
+which is just a generic &#34;pointer so some damn thing or other&#34; PMC type which Parrot does <i>no</i> management of.</dd><p class="pad"></p>
+
+<dt><a name="2"
+>2</a></dt><p class="pad"></p>
+
+<dd>A pointer to a short,
+taken from an P register of an int&#45;like PMC.
+On return from NCI,
+the PMC_int_val will hold the new value.</dd><p class="pad"></p>
+
+<dt><a name="3"
+>3</a></dt><p class="pad"></p>
+
+<dd>A pointer to an int,
+taken from an P register of an int&#45;like PMC.
+On return from NCI,
+the PMC_int_val will hold the new value.</dd><p class="pad"></p>
+
+<dt><a name="4"
+>4</a></dt><p class="pad"></p>
+
+<dd>A pointer to a long,
+taken from an P register of an int&#45;like PMC.
+On return from NCI,
+the PMC_int_val will hold the new value.</dd><p class="pad"></p>
+
+<dt><a name="t"
+>t</a></dt><p class="pad"></p>
+
+<dd>string pointer.
+Taken from,
+or stuck into,
+a string register.
+(Converted to a null&#45;terminated C string before passing in)</dd><p class="pad"></p>
+
+<dt><a name="C"
+>C</a></dt><p class="pad"></p>
+
+<dd>This parameter is used for passing in a callback function pointer.
+It refers to the function Parrot_callback_C,
+which has a signature of:</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>  void Parrot_callback_C(void *external_data, PMC *callback_info);</pre>
+
+<dd>More explanation in the <a href='TODO'>callbacks</a> section.</dd><p class="pad"></p>
+
+<dt><a name="D"
+>D</a></dt><p class="pad"></p>
+
+<dd>This parameter is used for passing in a callback function pointer. It refers to the function Parrot_callback_C, which has a signature of:</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>  void Parrot_callback_D(PMC *callback_info, void *external_data);</pre>
+
+<dd>More explanation in the <a href='TODO'>callbacks</a> section.</dd><p class="pad"></p>
+
+<dt><a name="Y"
+>Y</a></dt><p class="pad"></p>
+
+<dd>This parameter is a PMC for the sub which should be called into by the callback. Only valid in a signature with a C or D parameter, and it <i>must</i> be immediately followed by a parameter of type Z.</dd><p class="pad"></p>
+
+<dt><a name="Z"
+>Z</a></dt><p class="pad"></p>
+
+<dd>This parameter is a PMC representing the data to be passed into the function being called into. It is only valid when it immediately follows a parameter of type Y.</dd><p class="pad"></p>
+</dl>
+
+<p>Note that not all types are valid as return types.</p>
+
+<h2><a name="Examples"
+>Examples <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<p>Most of the function parameters are reasonably self&#45;evident. Some, however, merit additional explanation. The</p>
+
+<h2><a name="Callbacks"
+>Callbacks <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<p>Some libraries, particularly ones implementing more complex functionality such as databases or GUIs, want callbacks, that is ways to call a function under the control of the library rather than under control of the interpreter. These functions must be C functions, and generally are passed parameters to indicate what should be done.</p>
+
+<p>Unfortunately there&#39;s no good way to generically describe all possible callback parameter sets, so in some cases hand&#45;written C will be necessary. However, many callback functions share a common signature, and parrot provides some ready&#45;made functions for this purpose that should serve for most of the callback uses.</p>
+
+<p>There are two callback functions, Parrot_callback_C and Parrot_callback_D, corresponding to callback function signature letters C and D, respectively. If the callback function is supposed to look like:</p>
+
+<pre lang='und' xml:lang='und'>   void (function *)(void *library_data, void *your_data);</pre>
+
+<p>then use type C, where if the function signature is:</p>
+
+<pre lang='und' xml:lang='und'>   void (function *)(void *your_data, void *library_data);</pre>
+
+<p>then use a type of D. The actual pointer types for the parameters don&#39;t have to be void *, but they must be pointers of some sort.</p>
+
+<p>Since parrot needs more than just a pointer to a generic function to figure out what to do, it stuffs all the extra information into the <code lang='und' xml:lang='und'>your_data</code> pointer, which contains a custom PMC holding all the information that Parrot needs.</p>
+
+<p>The NCI function signature for a callback matching Parrot_callback_C is <code lang='und' xml:lang='und'>vCYZ</code>, while the function signature for a callback matching Parrot_callback_D is <code lang='und' xml:lang='und'>vDYZ</code>.</p>
+
+<p>The callback functions take care of wrapping the external data pointer into an UnManagedStruct PMC, the same as if it were a p return type of a normal NCI function.</p>
+
+<p>The signature of the <i>parrot</i> subroutine which is called by the callback should be:</p>
+
+<pre lang='und' xml:lang='und'>   void parrotsub(PMC user_data, PMC external_data)</pre>
+
+<p>The sequence for this is:</p>
+
+<dl>
+<dt><a name="Step_1"
+>Step 1</a></dt><p class="pad"></p>
+
+<dd>Register the function which takes all the callback information</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>  dlfunc CALLBACK_REGISTER_FUNC, LIBRARY_PMC, FUNCTION_NAME, &#39;vCYZ&#39;</pre>
+
+<dt><a name="Step_2"
+>Step 2</a></dt><p class="pad"></p>
+
+<dd>Register the actual callback</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>  newsub $P5, .Sub, _some_parrot_sub
+  # Alternately, if it&#39;s in a global
+  # $P5 = global &#34;some::sub::name&#34;
+  new $P6, .PerlInt # The data we get handed
+  .pcc_begin prototyped
+  .arg $P5
+  .arg $P6
+  .pcc_call CALLBACK_REGISTER_FUNC
+  .pcc_end</pre>
+
+<dt><a name="Step_3"
+>Step 3</a></dt><p class="pad"></p>
+
+<dd>Hand over control to the external library. <i>IT IS IMPORTANT THAT THE INTERPRETER YOU ARE CALLING BACK INTO IS NOT ACTIVE WHEN THE CALLBACK IS MADE!</i></dd><p class="pad"></p>
+</dl>
+
+<p>When the callback function is invoked by the external library, the function itself should look like:</p>
+
+<pre lang='und' xml:lang='und'>  .sub _my_callback prototyped
+    .param pmc my_data
+    .param pmc library_data
+    # Do something with the passed in data
+  .end</pre>
+
+<p>Parrot itself handles all the nasty bits involved in collecting up the interpreter pointer, creating the wrapping PMCs, stuffing data various places, and generally dealing with the bookkeeping.</p>
+
+<h1><a name="REFERENCES"
+>REFERENCES <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p><a href='TODO'>pdd06_pasm.pod</a></p>
+
+<h1><a name="VERSION"
+>VERSION <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<h2><a name="CURRENT"
+>CURRENT <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<pre lang='und' xml:lang='und'>    Maintainer: Dan Sugalski
+    Class: Internals
+    PDD Number: 16
+    Version: 1.0
+    Status: Developing
+    Last Modified: December 28, 2003
+    PDD Format: 1
+    Language: English</pre>
+
+<h2><a name="HISTORY"
+>HISTORY <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="version_1"
+>version 1</a></dt><p class="pad"></p>
+
+<dd>None. First version</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="CHANGES"
+>CHANGES <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="Version_1.0"
+>Version 1.0</a></dt><p class="pad"></p>
+
+<dd>None. First version</dd><p class="pad"></p>
+</dl>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

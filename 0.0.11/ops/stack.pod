@@ -1,0 +1,302 @@
+=head1 NAME
+
+stack.ops - Stack Ops
+
+=head1 DESCRIPTION
+
+Operations that manipulate Parrot's register, user and integer
+stacks.
+
+
+=cut
+
+=head2 Register stack operations
+
+These operations affect entire sets of registers.
+
+=over 4
+
+
+=cut
+
+=item B<popi>()
+
+=item B<popn>()
+
+=item B<popp>()
+
+=item B<pops>()
+
+Restore all the registers of the type indicated in the name of the operation
+from the most recently B<push>ed register frames.
+
+A register frame holds only 16 registers, so we pop two frames from the 
+frame stack. We use the first frame to restore registers 16-31, and the 
+second frame to restore registers 0-15. By restoring in this order, we 
+ensure that a C<push> followed by a C<pop> returns the working set of 
+registers to their original state.
+
+
+=cut
+
+=item B<popbottomi>()
+
+=item B<popbottomn>()
+
+=item B<popbottomp>()
+
+=item B<popbottoms>()
+
+Restore registers 0-15 of the type indicated in the name of the operation
+from a register frame popped off the corresponding frame stack.
+
+
+=cut
+
+=item B<poptopi>()
+
+=item B<poptopn>()
+
+=item B<poptopp>()
+
+=item B<poptops>()
+
+Restore registers 16-31 of the type indicated in the name of the operation
+from a register frame popped off the corresponding frame stack.
+
+
+=cut
+
+=item B<pushi>()
+
+=item B<pushn>()
+
+=item B<pushp>()
+
+=item B<pushs>()
+
+Save all the registers of the type indicated in the name of the operation
+on the appropriate register frame stack.
+
+A register frame holds only 16 registers, so we push two frames onto the 
+stack. The first frame holds the values from registers 0-15; the second
+frame holds the values from registers 16-31. 
+
+
+=cut
+
+
+=cut
+
+=item B<pushtopi>()
+
+=item B<pushtopn>()
+
+=item B<pushtopp>()
+
+=item B<pushtops>()
+
+Save registers 16-31 of the type indicated in the name of the operation
+on the appropriate register frame stack.
+
+
+=cut
+
+
+=cut
+
+=item B<pushbottomi>()
+
+=item B<pushbottomn>()
+
+=item B<pushbottomp>()
+
+=item B<pushbottoms>()
+
+Save registers 0-15 of the type indicated in the name of the operation
+on the appropriate register frame stack.
+
+
+=cut
+
+=item B<saveall>()
+
+Save all of the registers onto the appropriate frame stacks.
+This op is equivalent to:
+
+        pushi
+        pushn
+        pushs
+        pushp
+
+(or some other permutation of these ops).
+
+=item B<restoreall>()
+
+Restore all the registers from the appropriate frame stacks.
+This op is equivalent to:
+
+        popi
+        popn
+        pops
+        popp
+
+(or some other permutation of these ops).
+
+=item B<savetop>()
+
+Save registers 16-31 of all the register sets on the appropriate frame stacks.
+This op is equivalent to:
+
+        pushtopi
+        pushtopn
+        pushtops
+        pushtopp
+
+(or some other permutation of these ops).
+
+=item  B<restoretop>()
+
+Restore registers 16-31 of all the register sets from the appropriate frame 
+stacks. This op is equivalent to:
+
+        poptopi
+        poptopn
+        poptops
+        poptopp
+
+(or some other permutation of these ops).
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 User stack operations
+
+These operations affect individual registers.
+
+=over 4
+
+
+=cut
+
+=item B<entrytype>(out INT, in INT)
+
+Gets the type of entry $2 of the user stack and puts it in $1.
+
+
+=cut
+
+=item B<depth>(out INT)
+
+Puts the depth of the user stack in $1.
+
+
+=cut
+
+=item B<lookback>(out INT, in INT)
+
+=item B<lookback>(out STR, in INT)
+
+=item B<lookback>(out NUM, in INT)
+
+=item B<lookback>(out PMC, in INT)
+
+Finds the entry in the user stack at offset $2 from the top and put it
+in register $1. Positive numbers count down from the top of the stack,
+negative numbers count up from the bottom. (0 is the topmost entry, -1
+is the bottom-most)
+
+
+=cut
+
+=item B<save>(in INT)
+
+=item B<save>(in NUM)
+
+=item B<save>(in STR)
+
+=item B<save>(in PMC)
+
+Save register or constant $1 onto the user stack.
+
+
+=cut
+
+=item B<savec>(in STR)
+
+=item B<savec>(in PMC)
+
+Save a clone of register or constant $1 onto the user stack.
+
+
+=cut
+
+=item B<restore>(out INT)
+
+=item B<restore>(out NUM)
+
+=item B<restore>(out PMC)
+
+=item B<restore>(out STR)
+
+Restore register $1 from the user stack.
+
+
+=cut
+
+=item B<rotate_up>(in INT)
+
+Rotate the top $1 entries in the user stack by one. If $1 is positive,
+then the stack rotates upwards: the ($1)th entry becomes the ($1-1)th
+entry and so on, all the way up to the top of the stack, while the
+entry formerly at the top of the stack becomes the new ($1)th entry.
+If $1 is negative, the stack rotates downwards: the top entry becomes
+the second entry, the second becomes the third etc., while the former
+($1)th entry becomes the new top entry.
+
+
+=cut
+
+=item B<intsave>(in INT)
+
+Save register or constant $1 onto the high-speed int stack.
+
+
+=cut
+
+=item B<intrestore>(out INT)
+
+Restore register $1 from the high-speed int stack.
+
+
+=cut
+
+=item B<intdepth>(out INT)
+
+Puts the depth of the high-speed int stack in $1.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Untitled</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Untitled</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../html/index.html">Contents</a> | <a href="../../../html/languages.html">Language Implementations</a> | <a href="../../../html/tcl.html">TCL</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="Administrative_Issues"
+>Administrative Issues <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="[interpinfo_name]"
+>[interpinfo name]</a></dt><p class="pad"></p>
+
+<dd>how to do this from inside parrot?</dd><p class="pad"></p>
+
+<dt><a name="migrate_all_these_issues_to_RT."
+>migrate all these issues to RT.</a></dt><p class="pad"></p>
+
+<dd>TODO tests would also suffice,
+where possible.</dd><p class="pad"></p>
+
+<dt><a name="update_docs/*"
+>update docs/*</a></dt><p class="pad"></p>
+
+<dt><a name="add_pod_to_all_.imc"
+>add pod to all .imc</a></dt><p class="pad"></p>
+</dl>
+
+<h1><a name="Programming_Issues"
+>Programming Issues <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<h2><a name="C&#45;level_tasks"
+>C&#45;level tasks <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="List_to_String_(KJ?)"
+>List to String (KJ?)</a></dt><p class="pad"></p>
+
+<dd>The current list to string logic in <code lang='und' xml:lang='und'>dynclasses/tcllist.pmc</code> is missing logic to properly escape string elements.</dd><p class="pad"></p>
+
+<dt><a name="PMC_based_parser"
+>PMC based parser</a></dt><p class="pad"></p>
+
+<dd>Instead of the current PIR level parsing,
+we should instead use a pmc &#45; not only should this improve speed slightly,
+but will help us implement the [parser] builtin.</dd><p class="pad"></p>
+
+<dt><a name="string_to_list"
+>string to list</a></dt><p class="pad"></p>
+
+<dd>Should be moved to tcllist&#39;s set_string method.
+(but this requires first moving the parser into a pmc.)</dd><p class="pad"></p>
+
+<dt><a name="tclword"
+>tclword</a></dt><p class="pad"></p>
+
+<dd>An object is probably too heavyweight for this.
+A PMC with a few overloaded methods is probably sufficient.</dd><p class="pad"></p>
+
+<dt><a name="Use_PMCs_to_handle_numifying"
+>Use PMCs to handle numifying</a></dt><p class="pad"></p>
+
+<dd>not the pir routines we now have.
+Verify that [expr 2a + 2b] behaves appropriately when doing this.
+Include proper numification of octal and hex.</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="PIR&#45;level_tasks"
+>PIR&#45;level tasks <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="globals_vs._lexicals"
+>globals vs.
+lexicals</a></dt><p class="pad"></p>
+
+<dd>Right now,
+globals are done with lexicals.
+get_var/set_var needs to be updated to check the call_level &#45; if we&#39;re at 0,
+then use a global.
+[global] and [upvar] may need attention once this is done.</dd><p class="pad"></p>
+
+<dt><a name="interactive_tclsh"
+>interactive tclsh</a></dt><p class="pad"></p>
+
+<dd>interactive tclsh mode currently only waits for EOF and then runs all commands entered.
+should have sane defaults for tcl_prompt1,
+tcl_prompt2 and respect them,
+and process intermediate input.</dd><p class="pad"></p>
+
+<dt><a name="implement_default_globals,_etc."
+>implement default globals,
+etc.</a></dt><p class="pad"></p>
+
+<dd>global variables provided by tcl libary.
+<a href='TODO'>tclvars</a>.</dd><p class="pad"></p>
+
+<dd>global variables provided by tcl interpreter.
+<a href='TODO'>tclsh</a></dd><p class="pad"></p>
+
+<dd>source per&#45;user settings.
+<a href='TODO'>tclsh</a></dd><p class="pad"></p>
+
+<dt><a name="misc"
+>misc</a></dt><p class="pad"></p>
+
+<dd>hex &#38; unicode escapes are not supported in <code lang='und' xml:lang='und'>lib/parser.imc</code></dd><p class="pad"></p>
+
+<dt><a name="unimplemented_commands/subcommands"
+>unimplemented commands/subcommands</a></dt><p class="pad"></p>
+
+<dd>[after] [array get]* [array names] [array unset] [array statistics] [array anymore] [array donesearch] [array nextelement] [array startsearch] [bgerror] [binary] [case] [clock] [close] [cd] [dde] [encoding] [eof] [exec] [fblocked] [fconfigure] [fcopy] [file] [fileevent] [flush] [gets] [glob] [http] [info]* [interp] [library] [lindex] [load] [lreplace] [lsearch]* [lset] [lsort] [memory] [msgcat] [namespace] [open] [package] [pid] [pwd] [read] [registry] [regexp] [regsub] [resource] [safe] [scan] [seek] [socket] [subst] [string replace] [string tolower] [string totitle] [string toupper] [string trim] [string trimleft] [string trimright] [string compare] [string equal] [string last] [string bytelength] [string is] [string map] [string wordstart] [string wordend] [switch] [tcltest] [tell] [update] [variable] [vwait]</dd><p class="pad"></p>
+
+<dd>* &#45; assigned</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="Tests"
+>Tests <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="standards"
+>standards</a></dt><p class="pad"></p>
+
+<dd>Any future tests,
+write more like t/tcl_var_subst.t.
+Eventually cleanup tests so they&#39;re consistent.</dd><p class="pad"></p>
+
+<dt><a name="Add_tests_for..."
+>Add tests for...</a></dt><p class="pad"></p>
+
+<dd>tclword.imc,
+PMCs,
+the macros,
+expr&#39;s precedence and parens,
+[puts]&#39;s ability to write to other channels,
+the <code lang='und' xml:lang='und'>compreg</code> compiler.</dd><p class="pad"></p>
+
+<dd>[uplevel] [upvar] [lrange] [inline] [string repeat]</dd><p class="pad"></p>
+
+<dt><a name="pass_tcl_test_suite"
+>pass tcl test suite</a></dt><p class="pad"></p>
+</dl>
+
+<h1><a name="Uncategorized_Issues"
+>Uncategorized Issues <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="From_leo_&#45;_cleanup_of_tcl_objects."
+>From leo &#45; cleanup of tcl objects.</a></dt><p class="pad"></p>
+
+<dd><code lang='und' xml:lang='und'>tclobject</code> is an abstract object,
+it doesn&#39;t have a vtable.
+But the bundling code *does* <code lang='und' xml:lang='und'>pmc_register</code> this PMC.
+This leads to an empty vtable slot,
+dereferencing that NULL is an operation,
+which many systems don&#39;t like.</dd><p class="pad"></p>
+
+<dt><a name="Remove_Perl*"
+>Remove Perl*</a></dt><p class="pad"></p>
+
+<dd>Mostly done.
+All that seems to be left is PerlUndef.
+Much was already converted to the internal types.
+PerlUndef removal will probably result (finally) in the use of null checks where it&#39;s being used for that,
+and TclObject where it&#39;s being used for shimmering.</dd><p class="pad"></p>
+
+<dt><a name="Freeze/Thaw_of_TclWord_would_..."
+>Freeze/Thaw of TclWord would ...</a></dt><p class="pad"></p>
+
+<dd>allow us to build a braindead compile option &#45; given a chunk of tcl,
+generate a chunk of PIR that we can emit to be saved,
+compiled,
+and then run again.</dd><p class="pad"></p>
+
+<dt><a name="tail_call_optimizations"
+>tail call optimizations</a></dt><p class="pad"></p>
+
+<dd>tail call optimizations &#45; there are several cases where I could use this and save myself a call.
+Possible to do right now with PASM &#45; wait for PIR support before welding in.</dd><p class="pad"></p>
+
+<dt><a name="provide_a_way_to_access_existing_library_PIR_from_Tcl."
+>provide a way to access existing library PIR from Tcl.</a></dt><p class="pad"></p>
+
+<dt><a name="add_benchmarks?"
+>add benchmarks?</a></dt><p class="pad"></p>
+
+<dt><a name="given_freeze/thaw_for_objects..."
+>given freeze/thaw for objects...</a></dt><p class="pad"></p>
+
+<dd>Once freeze/thaw is working for tclwords (currently waiting on parrot support),
+rewrite proc to preparse once and cache the result in the generated sub rather than reparsing each time.</dd><p class="pad"></p>
+
+<dd>(Though this seems evil,
+too.
+There must be a better way.)</dd><p class="pad"></p>
+
+<dt><a name="TclWord"
+>TclWord</a></dt><p class="pad"></p>
+
+<dd>implement <code lang='und' xml:lang='und'>is_const</code> to allow for some optimizations in the compiler.
+(which isn&#39;t written yet.) when adding words,
+default to true,
+but if at any point we add a variable or a command,
+invalidate that.
+(mostly done!)</dd><p class="pad"></p>
+
+<dd>Move TclWord namespace into _Tcl::Word,
+less clutter?</dd><p class="pad"></p>
+
+<dt><a name="multiple_level_lists"
+>multiple level lists</a></dt><p class="pad"></p>
+
+<dd>This will be much easier to do when we can call into the parser from the TclList PMC.
+(is this already doable?)</dd><p class="pad"></p>
+
+<dt><a name="compiler_vs._interpreter"
+>compiler vs.
+interpreter</a></dt><p class="pad"></p>
+
+<dd>it should be possible to further extend our interpreter this to make an actual compiler,
+where the _compiler emits PIR.
+So,
+the resulting call from,
+say,
+[source] would be:</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>        # Note this a change from _parse&#39;s current signature 
+        (parsed_data_structure,tcl_status,error) = _parse(tcl_code)
+        (pir_code,tcl_status,error) = _compile(parsed_data_structure)</pre>
+
+<dd>And now that we have the pir_code, we can either emit the necessary PIR (ala parrot&#39;s &#45;o option) or we can compile and run it.</dd><p class="pad"></p>
+
+<dd>Caveat: how to support &#45;o with user defined procs &#45; right now, proc is defining the sub on the fly, where, with a compiler, we may want to defer compilation, and simply be able to extract the generated PIR.</dd><p class="pad"></p>
+
+<dt><a name="(LOW)_speed"
+>(LOW) speed</a></dt><p class="pad"></p>
+
+<dd>Comparing examples/fact.tcl with parrot vs. tclsh (OSX)</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'> ??/??/??: 8&#45;12 x slower, single call
+ 05/14/04: 500 calls in a loop slows us down to 60x!
+ 11/22/04: 500 calls in a loop: only 10x slower!</pre>
+
+<dt><a name="expr"
+>expr</a></dt><p class="pad"></p>
+
+<dd>Clean up expr. MUUUUCH room for improvement there.</dd><p class="pad"></p>
+
+<dd>expr &#45; parse/interpret split &#45; This is working for expr &#45; change any other thing that calls __expression to use the _p, _i variants, delete the original proc. Once we&#39;ve done that, determine a better structure to use as the inter mediate representation between the two.</dd><p class="pad"></p>
+
+<dd>clean up expr so that it&#39;s not passing around type indicators. &#45; just use PMCs everywhere. (Though we may still need to have CONST vs. VARIABLE types.</dd><p class="pad"></p>
+
+<dd>The type indicator is also used to disambiguate operators and function calls from operands. We can easily remove it for operands, but how to cleanly remove this for operators?</dd><p class="pad"></p>
+
+<dd>TBD: strings, floats as operands &#45; (many of the math funcs return floats but you can&#39;t specify them, and not everything takes them (try, for example, [expr sin(1) + sin(1)] vs [expr sin(1) * sin(1)].)</dd><p class="pad"></p>
+
+<dd>TBD: blocks, commands, and strings as operands</dd><p class="pad"></p>
+
+<dd>TBD: logical binary ops &#38; ternary op (need deferred evaluation) ; unary ops; ops that work on strings only.</dd><p class="pad"></p>
+
+<dd>TBD: functions that take &#62; 1 arg.</dd><p class="pad"></p>
+
+<dd>TBD: Argument type requirements &#45; Currently works ONLY on bitand &#45; esp need to get any that require int&#45;only args, as we can now /generate/ floats, even if we cannot specify them. {This probably requires switching to Tcl* PMCs and putting the logic in there hidden under MMD}</dd><p class="pad"></p>
+
+<dt><a name="misc"
+>misc</a></dt><p class="pad"></p>
+
+<dd>complete [error] (need global var support)</dd><p class="pad"></p>
+</dl>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

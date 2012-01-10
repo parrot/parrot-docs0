@@ -1,0 +1,195 @@
+=head1 NAME
+
+io.ops
+
+
+=cut
+
+=head1 DESCRIPTION
+
+Parrot's IO API
+
+
+=cut
+
+=head2 Parrot IO API Operations
+
+
+=over 4
+
+
+=cut
+
+=item B<close>(in PMC)
+
+Close IO object $1
+
+
+=cut
+
+=item B<fdopen>(out PMC, in INT, in STR)
+
+Create ParrotIO object as $1 as a copy of file descriptor $2.
+
+XXX: integral file descriptors may not exist outside of the UNIX
+     platform.  This op needs work.
+
+
+=cut
+
+=item B<getfd>(out INT, in PMC)
+
+Get the file descriptor out of the ParrotIO object $2 and store it in $1
+
+XXX: integral file descriptors may not exist outside of the UNIX
+     platform.
+
+
+=cut
+
+=item B<getstdin>(out PMC)
+
+Create a new ParrotIO object for the stdin file descriptor and
+store it in $1
+
+=item B<getstdout>(out PMC)
+
+Create a new ParrotIO object for the stdout file descriptor and
+store it in $1
+
+=item B<getstderr>(out PMC)
+
+Create a new ParrotIO object for the stderr file descriptor and
+store it in $1
+
+
+=cut
+
+=item B<open>(out PMC, in STR, in STR)
+
+Open URL (file, address, database, in core image) named $2 with
+Perl style mode string in $3 and create an IO object in $1.
+
+=item B<open>(out PMC, in STR)
+
+Open URL (file, address, database, in core image) named $2 with
+read/write mode and create an IO object in $1.
+
+
+=cut
+
+=item B<print>(in INT)
+
+=item B<print>(in NUM)
+
+=item B<print>(in PMC)
+
+=item B<print>(in STR)
+
+Print $1 to standard output.
+
+
+=cut
+
+=item B<printerr>(in INT)
+
+=item B<printerr>(in NUM)
+
+=item B<printerr>(in STR)
+
+=item B<printerr>(in PMC)
+
+Print $1 to standard error.
+
+
+=cut
+
+=item B<print>(in PMC, in INT)
+
+=item B<print>(in PMC, in NUM)
+
+=item B<print>(in PMC, in STR)
+
+=item B<print>(in PMC, in PMC)
+
+Print $2 on the IO stream object $1.
+
+
+=cut
+
+=item B<read>(out STR, in INT)
+
+Read up to N bytes from standard input stream
+If stream is linebuffered, will return at EOL, for
+files it will read MIN(MAX(avail, N), 65535) bytes.
+Warning: This is a quick hack.
+
+=item B<read>(out STR, in PMC, in INT)
+
+Read up to N bytes from IO PMC stream.
+If stream is linebuffered, will return at EOL, for
+files it will read MIN(MAX(avail, N), 65535) bytes.
+Warning: This is a quick hack.
+
+
+=cut
+
+=item B<readline>(out STR, in PMC)
+
+Read a line up to EOL from filehandle $2.
+This switches the filehandle to linebuffer-mode.
+
+If for some reason the line's longer than 64K you get only 64K
+
+
+=cut
+
+=item B<seek>(in PMC, in INT, in INT)
+
+seek:
+Set file position to offset $2 on IO stream $1. 'whence' is
+indicated by the value in $3.
+
+=item B<seek>(in PMC, in INT, in INT, in INT)
+
+64bit seek:
+Set file position to offset ($2 << 32 | $3) on IO stream $1. 'whence' is
+indicated by the value in $4. This allows 64-bit seeks with only 32-bit
+INTVALS.
+
+
+=cut
+
+=item B<tell>(out INT, in PMC)
+
+tell:
+Get the current file position of stream $2 and store it in $1.
+On systems where INTVAL is 32bit the result will be truncated if the
+position is beyond 2 GiB
+
+=item B<tell>(out INT, out INT, in PMC)
+
+64bit tell:
+Get the current file positon of stream $3 in two parts of 32-bit each
+($1 = pos >> 32, $2 = pos & 0xffffffff).
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

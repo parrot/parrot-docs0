@@ -1,0 +1,14 @@
+=head1 NAME
+
+dotgnu.ops
+
+
+=cut
+
+=head1 DESCRIPTION
+
+Additional opcodes for C# compilation needed by cscc PM codegen
+
+
+=cut
+

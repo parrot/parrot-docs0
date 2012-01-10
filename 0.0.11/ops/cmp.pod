@@ -1,0 +1,206 @@
+=head1 NAME
+
+cmp.ops - Register Comparison Ops
+
+
+=cut
+
+=head1 DESCRIPTION
+
+Operations that compare two registers against each other.
+Some of these operations affect control flow directly; others
+do not.
+
+
+=cut
+
+=head2 Flow control comparison operators
+
+These operators branch based on the relationship between
+their operands.
+
+=over 4
+
+
+=cut
+
+=item B<eq>(in INT, in INT, inconst INT)
+
+=item B<eq>(in NUM, in NUM, inconst INT)
+
+=item B<eq>(in STR, in STR, inconst INT)
+
+=item B<eq>(in PMC, in PMC, inconst INT)
+
+=item B<eq>(in PMC, in INT, inconst INT)
+
+Branch if $1 is equal to $2.
+
+
+=cut
+
+=item B<ne>(in INT, in INT, inconst INT)
+
+=item B<ne>(in NUM, in NUM, inconst INT)
+
+=item B<ne>(in STR, in STR, inconst INT)
+
+=item B<ne>(in PMC, in PMC, inconst INT)
+
+Branch if $1 is not equal to $2.
+
+
+=cut
+
+=item B<lt>(in INT, in INT, inconst INT)
+
+=item B<lt>(in NUM, in NUM, inconst INT)
+
+=item B<lt>(in STR, in STR, inconst INT)
+
+=item B<lt>(in PMC, in PMC, inconst INT)
+
+=item B<lt>(in PMC, in INT, inconst INT)
+
+Branch if $1 is less than $2.
+
+
+=cut
+
+=item B<le>(in INT, in INT, inconst INT)
+
+=item B<le>(in NUM, in NUM, inconst INT)
+
+=item B<le>(in STR, in STR, inconst INT)
+
+=item B<le>(in PMC, in PMC, inconst INT)
+
+=item B<le>(in PMC, in INT, inconst INT)
+
+Branch if $1 is less than or equal to $2.
+
+
+=cut
+
+=item B<gt>(in INT, in INT, inconst INT)
+
+=item B<gt>(in NUM, in NUM, inconst INT)
+
+=item B<gt>(in STR, in STR, inconst INT)
+
+=item B<gt>(in PMC, in PMC, inconst INT)
+
+Branch if $1 is greater than $2.
+
+
+=cut
+
+=item B<ge>(in INT, in INT, inconst INT)
+
+=item B<ge>(in NUM, in NUM, inconst INT)
+
+=item B<ge>(in STR, in STR, inconst INT)
+
+=item B<ge>(in PMC, in PMC, inconst INT)
+
+Branch if $1 is greater than or equal to $2.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Flow control comparison operators
+
+These operators branch based on the relationship between
+their operands.
+
+=over 4
+
+
+=cut
+
+=item B<cmp>(out INT, in INT, in INT)
+
+=item B<cmp>(out INT, in NUM, in NUM)
+
+=item B<cmp>(out INT, in STR, in STR)
+
+=item B<cmp>(out INT, in PMC, in PMC)
+
+Sets $1 to -1 if $2 < $3, +1 if $2 > $3, and 0 otherwise.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Logical operations
+
+These operations apply logical functions to their arguments.
+
+=over 4
+
+
+=cut
+
+=item B<and>(out INT, in INT, in INT)
+
+=item B<and>(in PMC, in PMC, in PMC)
+
+Short-circuiting logical and.  Returns $2 if it's false, else returns $3.
+
+
+=cut
+
+=item B<not>(out INT, in INT)
+
+=item B<not>(in PMC, in PMC)
+
+Set the boolean state of $1 to the opposite of the boolean state from $2.
+
+
+=cut
+
+=item B<or>(out INT, in INT, in INT)
+
+=item B<or>(in PMC, in PMC, in PMC)
+
+Short-circuiting logical or.  Returns $2 if it's true, else returns $3.
+
+
+=cut
+
+=item B<xor>(out INT, in INT, in INT)
+
+=item B<xor>(in PMC, in PMC, in PMC)
+
+Logical xor.  Returns $2 if it's true and $3 isn't,
+returns $3 if it's true and $2 isn't, else returns false.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

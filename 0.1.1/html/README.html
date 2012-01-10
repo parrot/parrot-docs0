@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Untitled</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Untitled</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../html/index.html">Contents</a> | <a href="../html/info.html">Project Information</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<dl>
+<dt><a name="For_UNIX_like_systems_that_come_with_its_own_make,_gmake_should_be_used"
+>For UNIX like systems that come with its own make,
+<b><code lang='und' xml:lang='und'>gmake</b></code> should be used</a></dt><p class="pad"></p>
+
+<dt><a name="On_windows_systems,_nmake_is_used"
+>On windows systems,
+<b><code lang='und' xml:lang='und'>nmake</b></code> is used</a></dt><p class="pad"></p>
+
+<dt><a name="On_other_systems,_just_try_make"
+>On other systems,
+just try <b><code lang='und' xml:lang='und'>make</b></code></a></dt><p class="pad"></p>
+</dl>
+
+<p>Now,
+the interpreter should build.
+If you are building the ICU library (this is the default on most systems),
+you need to use GNU make instead (or something compatible with it).</p>
+
+<p>You can test parrot by running</p>
+
+<pre lang='und' xml:lang='und'>    make test         (or C&#60;nmake test&#62;/C&#60;gmake test&#62;)</pre>
+
+<p>You can run the full test suite with</p>
+
+<pre lang='und' xml:lang='und'>    make fulltest</pre>
+
+<p>On some systems you can install parrot:</p>
+
+<pre lang='und' xml:lang='und'>    make install</pre>
+
+<p>This installs a bunch of files in /usr/local/parrot&#45;$VERSION. The parrot executable is in /usr/local/parrot&#45;$VERSION/bin. Please note that this feature is currently experimental. You have to link or copy the executable somewhere into your path. Finally no dynamic extensions from runtime/parrot/dynext are installed, albeit dynamic extensions are searched for in the installed directory structure.</p>
+
+<p>Look at docs/parrot.pod and docs/intro.pod for where to go from here. If you have any problems, see the section &#34;Reporting Problems&#34; in docs/intro.pod. These documents are in POD format. You can view these files with:</p>
+
+<pre lang='und' xml:lang='und'>    perldoc &#45;F docs/intro.pod</pre>
+
+<p>NOTES &#45;&#45;&#45;&#45;&#45;</p>
+
+<p>On some older computers with little RAM, the computed&#45;goto dispatch core (ops/core_ops_cg.c) may take a while to compile or may fail to compile at all. You can pass a flag to Configure.pl (&#45;&#45;cgoto=0) to disable the computed&#45;goto core, at a slight cost in runtime speed.</p>
+
+<p>CHANGES &#45;&#45;&#45;&#45;&#45;&#45;&#45;</p>
+
+<p>For documentation on the user&#45;visible changes between this version and previous versions, please see NEWS. The full changelog is (or should be) available as ChangeLog.</p>
+
+<p>MAILING LISTS &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</p>
+
+<p>The mailing list for parrot is perl6&#45;internals. Subscribe by sending mail to perl6&#45;internals&#45;subscribe@perl.org. It is archived at <a href="http://nntp.perl.org/group/perl.perl6.internals">http://nntp.perl.org/group/perl.perl6.internals</a></p>
+
+<p>WEB SITES &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</p>
+
+<p>The following web sites have all the Parrot information you need: <a href="http://dev.perl.org/">http://dev.perl.org/</a> <a href="http://cvs.perl.org/">http://cvs.perl.org/</a> <a href="http://www.parrotcode.org/">http://www.parrotcode.org/</a></p>
+
+<p>Have fun, The Parrot team.</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

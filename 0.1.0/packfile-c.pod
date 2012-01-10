@@ -1,0 +1,804 @@
+=head1 NAME
+
+src/packfile.c - Parrot PackFile API
+
+=head1 DESCRIPTION
+
+=head2 PackFile Manipulation Functions
+
+This file contains all the functions required for the processing of the
+structure of a PackFile. It is not intended to understand the byte code
+stream itself, but merely to dissect and reconstruct data from the
+various segments. See F<docs/parrotbyte.pod> for information about the
+structure of the frozen bytecode.
+
+=over 4
+
+
+=cut
+
+=item C<void
+PackFile_destroy(struct PackFile *pf)>
+
+Delete a C<PackFile>.
+
+
+=cut
+
+=item C<static INTVAL
+PackFile_check_segment_size(opcode_t segment_size, const char *debug)>
+
+Internal function to check C<segment_size % sizeof(opcode_t)>.
+
+
+=cut
+
+=item C<static void
+make_code_pointers(struct PackFile_Segment *seg)>
+
+Make compat/shorthand pointers.
+
+The first segments read are the default segments.
+
+
+=cut
+
+=item C<static int
+sub_pragma(Parrot_Interp interpreter, struct PackFile *pf,
+        int action, PMC *sub_pmc)>
+
+Handle @LOAD, @MAIN ... pragmas for B<sub_pmc>
+
+
+=cut
+
+=item C<static void run_sub(Parrot_Interp interpreter, PMC* sub_pmc)>
+
+Run the B<sub_pmc> due its B<@LOAD> pragma
+
+
+=cut
+
+=item <static void
+do_sub_pragmas(Parrot_Interp interpreter, struct PackFile *self, int action)>
+
+Run autoloaded bytecode, mark MAIN subroutine entry
+
+
+=cut
+
+=item C<static void
+fixup_subs(struct Parrot_Interp *interpreter, struct PackFile *self,
+   int action)>
+
+Fixes up the constant subroutine objects. B<action> is one of
+B<PBC_PBC>, B<PBC_LOADED>, or B<PBC_MAIN>.
+
+
+=cut
+
+=item C<opcode_t
+PackFile_unpack(struct Parrot_Interp *interpreter, struct PackFile *self,
+                opcode_t *packed, size_t packed_size)>
+
+Unpack a C<PackFile> from a block of memory. The format is:
+
+  byte     wordsize
+  byte     byteorder
+  byte     major
+  byte     minor
+  byte     intvalsize
+  byte     floattype
+  byte     pad[10] = fingerprint
+
+  opcode_t magic
+  opcode_t language type
+
+  opcode_t dir_format
+  opcode_t padding
+
+  directory segment
+    * segment
+    ...
+
+All segments have this common header:
+
+  - op_count    ... total segment size incl. this count
+  - itype       ... internal type of data
+  - id          ... id of data e.g. byte code nr.
+  - size        ... size of data oparray
+  - data[size]  ... data array e.g. bytecode
+  segment specific data follows here ...
+
+Checks to see if the magic matches the Parrot magic number for
+Parrot C<PackFiles>.
+
+Returns size of unpacked if everything is OK, else zero (0).
+
+
+=cut
+
+=item C<INTVAL
+PackFile_map_segments (struct PackFile_Directory *dir,
+                       PackFile_map_segments_func_t callback,
+                       void *user_data)>
+
+For each segment in the directory C<dir> the callback function
+C<callback> is called. The pointer C<user_data> is append to each call.
+
+If a callback returns non-zero the processing of segments is stopped,
+and this value is returned.
+
+
+=cut
+
+=item C<INTVAL
+PackFile_add_segment (struct PackFile_Directory *dir,
+        struct PackFile_Segment *seg)>
+
+Adds the Segment C<seg> to the directory C<dir> The PackFile becomes the
+owner of the segment; that means its getting destroyed, when the
+packfile gets destroyed.
+
+
+=cut
+
+=item C<struct PackFile_Segment *
+PackFile_find_segment (struct PackFile_Directory *dir, const char *name,
+        int sub_dir)>
+
+Finds the segment with the name C<name> in the C<PackFile_Directory> if
+C<sub_dir> is true, directories are searched recursively The segment is
+returned, but its still owned by the C<PackFile>.
+
+
+=cut
+
+=item C<struct PackFile_Segment *
+PackFile_remove_segment_by_name (struct PackFile_Directory *dir,
+        const char *name)>
+
+Finds and removes the segment with name C<name> in the
+C<PackFile_Directory>. The segment is returned and must be destroyed by
+the user.
+
+
+=cut
+
+=back
+
+=head2 PackFile Structure Functions
+
+=over 4
+
+=item C<static void
+PackFile_set_header(struct PackFile *self)>
+
+Fill a C<PackFile> header with system specific data.
+
+
+=cut
+
+=item C<struct PackFile *
+PackFile_new(INTVAL is_mapped)>
+
+Allocate a new empty C<PackFile> and setup the directory.
+
+Directory segment:
+
+  +----------+----------+----------+----------+
+  |    Segment Header                         |
+  |    ..............                         |
+  +----------+----------+----------+----------+
+
+  +----------+----------+----------+----------+
+  |    number of directory items              |
+  +----------+----------+----------+----------+
+
+followed by a sequence of items
+
+  +----------+----------+----------+----------+
+  |    Segment type                           |
+  +----------+----------+----------+----------+
+  |    "name"                                 |
+  |    ...     '\0'       padding bytes       |
+  +----------+----------+----------+----------+
+  |    Offset in the file                     |
+  +----------+----------+----------+----------+
+  |    Size of the segment                    |
+  +----------+----------+----------+----------+
+
+"name" is a NUL-terminated c-string encoded in plain ASCII.
+
+Segment types are defined in F<include/parrot/packfile.h>.
+
+Offset and size are in C<opcode_t>.
+
+A Segment Header has these entries:
+
+ - op_count     total ops of segment incl. this count
+ - itype        internal type of segment
+ - id           internal id e.g code seg nr
+ - size         size of following op array, 0 if none
+ * data         possibly empty data, or e.g. byte code
+
+
+=cut
+
+=item C<INTVAL PackFile_funcs_register(struct PackFile *pf, UINTVAL type,
+        struct PackFile_funcs funcs)>
+
+Register the C<pack>/C<unpack>/... functions for a packfile type.
+
+
+=cut
+
+=item C<static opcode_t * default_unpack (struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *self, opcode_t *cursor)>
+
+The default unpack function.
+
+
+=cut
+
+=item C<void
+default_dump_header (Parrot_Interp interpreter, struct PackFile_Segment *self)>
+
+The default dump header function.
+
+
+=cut
+
+=item C<static void
+default_dump (Parrot_Interp interpreter, struct PackFile_Segment *self)>
+
+The default dump function.
+
+
+=cut
+
+=item C<static INTVAL
+pf_register_standard_funcs(struct PackFile *pf)>
+
+Called from within C<PackFile_new()> register the standard functions.
+
+
+=cut
+
+=item C<struct PackFile_Segment *
+PackFile_Segment_new_seg(struct PackFile_Directory *dir, UINTVAL type,
+        const char *name, int add)>
+
+Create a new segment.
+
+
+=cut
+
+=item C<void
+PackFile_Segment_destroy(struct PackFile_Segment * self)>
+
+
+=cut
+
+=item C<size_t
+PackFile_Segment_packed_size(struct PackFile_Segment * self)>
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_Segment_pack(struct PackFile_Segment * self, opcode_t *cursor)>
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_Segment_unpack(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment * self, opcode_t *cursor)>
+
+All all these functions call the related C<default_*> function.
+
+If a special is defined this gets called after.
+
+
+=cut
+
+=item C<void
+PackFile_Segment_dump(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *self)>
+
+Dumps the segment C<self>.
+
+
+=cut
+
+=back
+
+=head2 Standard Directory Functions
+
+=over 4
+
+=item C<static struct PackFile_Segment *
+directory_new(struct PackFile *pf, const char *name, int add)>
+
+Returns a new C<PackFile_Directory> cast as a C<PackFile_Segment>.
+
+
+=cut
+
+=item C<static void
+directory_dump(struct Parrot_Interp *interpreter,
+                struct PackFile_Segment *self)>
+
+Dumps the directory C<self>.
+
+
+=cut
+
+=item C<static opcode_t *
+directory_unpack(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *segp, opcode_t * cursor)>
+
+Unpacks the directory.
+
+
+=cut
+
+=item C<static void
+directory_destroy(struct PackFile_Segment *self)>
+
+Destroys the directory.
+
+
+=cut
+
+=item C<static void
+sort_segs(struct PackFile_Directory *dir)>
+
+Sorts the segments in C<dir>.
+
+
+=cut
+
+=item C<static size_t
+directory_packed_size(struct PackFile_Segment *self)>
+
+Returns the size of the directory minus the value returned by
+C<default_packed_size()>.
+
+
+=cut
+
+=item C<static opcode_t *
+directory_pack(struct PackFile_Segment *self, opcode_t *cursor)>
+
+Packs the directory C<self>.
+
+
+=cut
+
+=back
+
+=head2 C<PackFile_Segment> Functions
+
+=over 4
+
+=item C<static void
+segment_init(struct PackFile_Segment *self,
+              struct PackFile *pf,
+              const char *name)>
+
+Initializes the segment C<self>.
+
+
+=cut
+
+=item C<struct PackFile_Segment *
+PackFile_Segment_new(struct PackFile *pf, const char *name, int add)>
+
+Create a new default section.
+
+
+=cut
+
+=back
+
+=head2 Default Function Implementations
+
+The default functions are called before the segment specific functions
+and can read a block of C<opcode_t> data.
+
+=over 4
+
+=item C<static void
+default_destroy(struct PackFile_Segment *self)>
+
+The default destroy function.
+
+
+=cut
+
+=item C<static size_t
+default_packed_size(struct PackFile_Segment *self)>
+
+Returns the default size of the segment C<self>.
+
+
+=cut
+
+=item C<static opcode_t *
+default_pack(struct PackFile_Segment *self,
+              opcode_t *dest)>
+
+Performs the default pack.
+
+
+=cut
+
+=back
+
+=head2 ByteCode
+
+=over 4
+
+=item C<static void
+byte_code_destroy(struct PackFile_Segment *self)>
+
+Destroys the C<PackFile_ByteCode> segment C<self>.
+
+
+=cut
+
+=item C<static struct PackFile_Segment *
+byte_code_new(struct PackFile *pf, const char * name, int add)>
+
+New C<PackFile_ByteCode> segment.
+
+C<add> is ignored.
+
+
+=cut
+
+=back
+
+=head2 Debug Info
+
+=over 4
+
+=item C<static void
+pf_debug_destroy (struct PackFile_Segment *self)>
+
+Destroys the C<PackFile_Debug> segment C<self>.
+
+
+=cut
+
+=item C<static struct PackFile_Segment *
+pf_debug_new (struct PackFile *pf, const char * name, int add)>
+
+Returns a new C<PackFile_Debug> segment.
+
+C<add> is ignored.
+
+
+=cut
+
+=item C<static size_t
+pf_debug_packed_size (struct PackFile_Segment *self)>
+
+Returns the size of the C<PackFile_Debug> segment's filename in
+C<opcode_t> units.
+
+
+=cut
+
+=item C<static opcode_t *
+pf_debug_pack(struct PackFile_Segment *self, opcode_t *cursor)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<static opcode_t *
+pf_debug_unpack(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *self, opcode_t *cursor)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<struct PackFile_Debug *
+Parrot_new_debug_seg(struct Parrot_Interp *interpreter,
+        struct PackFile_ByteCode *cs, const char *filename, size_t size)>
+
+Create and append (or resize) a new debug seg for a code segment.
+
+
+=cut
+
+=item C<void
+Parrot_switch_to_cs_by_nr(struct Parrot_Interp *interpreter, opcode_t seg)>
+
+Switch to byte code segment number C<seg>.
+
+
+=cut
+
+=item C<struct PackFile_ByteCode *
+Parrot_switch_to_cs(struct Parrot_Interp *interpreter,
+    struct PackFile_ByteCode *new_cs)>
+
+Switch to a byte code segment C<new_cs>, returning the old segment.
+
+
+=cut
+
+=item C<void
+Parrot_pop_cs(struct Parrot_Interp *interpreter)>
+
+Destroy current byte code segment and switch to previous.
+
+
+=cut
+
+=back
+
+=head2 PackFile FixupTable Structure Functions
+
+=over 4
+
+=item C<void
+PackFile_FixupTable_clear(struct PackFile_FixupTable *self)>
+
+Clear a PackFile FixupTable.
+
+
+=cut
+
+=item C<static void
+fixup_destroy (struct PackFile_Segment *self)>
+
+Just calls C<PackFile_FixupTable_clear()> with C<self>.
+
+
+=cut
+
+=item C<static size_t
+fixup_packed_size(struct PackFile_Segment *self)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<static opcode_t *
+fixup_pack (struct PackFile_Segment *self, opcode_t *cursor)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<static struct PackFile_Segment *
+fixup_new(struct PackFile *pf, const char *name, int add)>
+
+Returns a new C<PackFile_FixupTable> segment.
+
+
+=cut
+
+=item C<static opcode_t *
+fixup_unpack(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *seg, opcode_t *cursor)>
+
+Unpack a PackFile FixupTable from a block of memory.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item C<void PackFile_FixupTable_new_entry(struct Parrot_Interp *interpreter,
+        char *label, enum_fixup_t type, opcode_t offs)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<static struct PackFile_FixupEntry *
+find_fixup(struct PackFile_FixupTable *ft, enum_fixup_t type,
+        const char *name)>
+
+Finds the fix-up entry for C<name> and returns it.
+
+
+=cut
+
+=item C<static INTVAL
+find_fixup_iter(struct PackFile_Segment *seg, void *user_data)>
+
+I<What does this do?>
+
+
+=cut
+
+=item C<struct PackFile_FixupEntry *
+PackFile_find_fixup_entry(struct Parrot_Interp *interpreter, enum_fixup_t type,
+        char * name)>
+
+I<What does this do?>
+
+
+=cut
+
+=back
+
+=head2 PackFile ConstTable Structure Functions
+
+=over 4
+
+=item C<void
+PackFile_ConstTable_clear(struct PackFile_ConstTable *self)>
+
+Clear the C<PackFile_ConstTable> C<self>.
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_ConstTable_unpack(struct Parrot_Interp *interpreter,
+        struct PackFile_Segment *seg,
+        opcode_t *cursor)>
+
+Unpack a PackFile ConstTable from a block of memory. The format is:
+
+  opcode_t const_count
+  *  constants
+
+Returns cursor if everything is OK, else zero (0).
+
+
+=cut
+
+=item C<static struct PackFile_Segment *
+const_new(struct PackFile *pf, const char *name, int add)>
+
+Returns a new C<PackFile_ConstTable> segment.
+
+
+=cut
+
+=item C<static void
+const_destroy(struct PackFile_Segment *self)>
+
+Destroys the C<PackFile_ConstTable> C<self>.
+
+
+=cut
+
+=back
+
+=head2 PackFile Constant Structure Functions
+
+=over 4
+
+=item C<struct PackFile_Constant *
+PackFile_Constant_new(void)>
+
+Allocate a new empty PackFile Constant.
+
+This is only here so we can make a new one and then do an unpack.
+
+
+=cut
+
+=item C<void
+PackFile_Constant_destroy(struct PackFile_Constant *self)>
+
+Delete the C<PackFile_Constant> C<self>.
+
+Dont't delete C<PMC>s or C<STRING>s, they are destroyed via DOD/GC.
+
+
+=cut
+
+=item C<size_t
+PackFile_Constant_pack_size(struct PackFile_Constant *self)>
+
+Determine the size of the buffer needed in order to pack the PackFile
+Constant into a contiguous region of memory.
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_Constant_unpack(struct Parrot_Interp *interpreter,
+                         struct PackFile_ConstTable *constt,
+                         struct PackFile_Constant *self, opcode_t *cursor)>
+
+Unpack a PackFile Constant from a block of memory. The format is:
+
+  opcode_t type
+  *  data
+
+Returns cursor if everything is OK, else zero (0).
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_Constant_unpack_pmc(struct Parrot_Interp *interpreter,
+                         struct PackFile_ConstTable *constt,
+                         struct PackFile_Constant *self,
+                         opcode_t *cursor)>
+
+Unpack a constant PMC (currently Subs only).
+
+
+=cut
+
+=item C<opcode_t *
+PackFile_Constant_unpack_key(struct Parrot_Interp *interpreter,
+                             struct PackFile_ConstTable *constt,
+                             struct PackFile_Constant *self,
+                             opcode_t *cursor)>
+
+Unpack a PackFile Constant from a block of memory. The format consists
+of a sequence of key atoms, each with the following format:
+
+  opcode_t type
+  opcode_t value
+
+Returns cursor if everything is OK, else zero (0).
+
+
+=cut
+
+=item C<static struct PackFile *
+PackFile_append_pbc(struct Parrot_Interp *interpreter, char *filename)>
+
+Read a PBC and append it to the current directory
+Fixup local label and sub addresses in newly loaded bytecode.
+
+
+=cut
+
+=item C<void
+Parrot_load_bytecode(struct Parrot_Interp *interpreter, char *filename)>
+
+Load and append a bytecode, IMC or PASM file into interpreter.
+
+Load some bytecode (PASM, PIR, PBC ...) and append it to the current
+directory.
+
+
+=cut
+
+=item C<void
+PackFile_fixup_subs(struct Parrot_Interp *interpreter)>
+
+I<What does this do?>
+
+
+=cut
+
+=back
+
+=head1 HISTORY
+
+Rework by Melvin; new bytecode format, make bytecode portable. (Do
+endian conversion and wordsize transforms on the fly.)
+
+leo applied and modified Juergen Boemmels packfile patch giving an
+extensible packfile format with directory reworked again, with common
+chunks (C<default_*>).
+
+2003.11.21 leo: moved low level item fetch routines to new
+F<pf/pf_items.c>
+
+
+=cut
+

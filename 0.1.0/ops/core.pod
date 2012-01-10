@@ -1,0 +1,664 @@
+=head1 NAME
+
+core.ops - Parrot Core Ops
+
+
+=cut
+
+=head1 DESCRIPTION
+
+Parrot's core library of ops.
+
+Core operations are primarily flow control and interpreter
+introspection.
+
+
+=cut
+
+=head2 Basic ops
+
+These are the fundamental operations.
+Please note: These opcodes must not be moved; they must have
+exactly these opcode numbers. Opcodes ending with underscores are for
+internal use only, don't emit these opcodes.
+
+=over 4
+
+
+=cut
+
+=item B<end>()
+
+Halts the interpreter. (Must be op #0, CORE_OPS_end). See also B<exit>.
+
+
+=cut
+
+=item B<noop>()
+
+Does nothing other than waste an iota of time and 32 bits of bytecode space.
+(Must be op #1, CORE_OPS_noop)
+
+=item B<cpu_ret>()
+
+Emit a cpu return instruction. This is used to return from CGP core
+to JIT code. Note: Do B<not> use this opcode. It is for internal use only.
+(Must be op #2, CORE_OPS_cpu_ret)
+
+=item B<check_events>()
+
+Check the event queue and run event handlers if there are unhandled events.
+Note: This opcode is mainly for testing. It should not be necessary to ever
+use it explicitly.
+(Must be op #3, CORE_OPS_check_events).
+
+=item B<check_events__>()
+
+Check the event queue and run event handlers if there are unhandled events.
+Note: Do B<not> use this opcode. It is for internal use only.
+(Must be op #4, CORE_OPS_check_events__).
+
+=item B<wrapper__>()
+
+Internal opcode to wrap unknown ops from loaded opcode libs.
+Don't use.
+(Must be op #5, CORE_OPS_wrapper__).
+
+=item B<prederef__>()
+
+Internal opcode to prederef opcodes on the fly.
+Don't use.
+(Must be op #6, CORE_OPS_prederef__ ).
+
+=item B<reserved>(in INT)
+
+Reserve 2 more fixed entries.
+
+=item B<load_bytecode>(in STR)
+
+Load Parrot bytecode from file $1, and (TODO) search the library path,
+to locate the file.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Control flow
+
+The control flow opcodes check conditions and manage program flow.
+
+=over 4
+
+
+=cut
+
+=item B<branch>(in INT)
+
+Branch forward or backward by the amount in $1.
+
+
+=cut
+
+=item B<branch_cs>(in STR)
+
+Intersegment branch to location in fixup table named $1.
+
+
+=cut
+
+=item B<bsr>(in INT)
+
+Branch to the location specified by $1. Push the current location onto the call
+stack for later returning.
+
+
+=cut
+
+=item B<ret>()
+
+Pop the location off the top of the call stack and go there.
+
+
+=cut
+
+=item B<jsr>(in INT)
+
+Jump to the location specified by register $1. Push the current
+location onto the call stack for later returning.
+
+
+=cut
+
+=item B<jump>(in INT)
+
+Jump to the address held in register $1.
+
+
+=cut
+
+=item B<enternative>()
+
+Internal opcode used to jump from normal bytecode into a JITted version.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Conditional branch operations
+
+These operations perform a conditional relative branch. If the condition is
+met, the branch happens, otherwise control falls to the next operation.
+
+=over 4
+
+
+=cut
+
+=item B<if>(in INT, inconst INT)
+
+=item B<if>(in NUM, inconst INT)
+
+=item B<if>(in PMC, inconst INT)
+
+=item B<if>(in STR, inconst INT)
+
+Check register $1. If true, branch by $2.
+
+
+=cut
+
+=item B<unless>(in INT, inconst INT)
+
+=item B<unless>(in NUM, inconst INT)
+
+=item B<unless>(in PMC, inconst INT)
+
+=item B<unless>(in STR, inconst INT)
+
+Check register $1. If false, branch by $2.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Subroutine  operations
+
+These operations are used to generate and call subroutines and
+continuations.
+
+=over 4
+
+
+=cut
+
+=item B<invoke>()
+
+Call the subroutine in P0, with parrot calling convention as
+described in PDD03.
+
+=item B<invoke>(in PMC)
+
+Call the subroutine in $1 with no defined calling convention or invoke
+a continuation for returning from a subroutine.
+
+=item B<invokecc>()
+
+Call the subroutine in P0 and generate a new return continuation in P1.
+
+=item B<invokecc>(in PMC)
+
+Call the subroutine in $1 and generate a new return continuation in P1.
+
+=item B<updatecc>()
+
+Update the state of the return continuation in P1. This is necessary,
+when any context stuff was changed between creating the return continuation
+and invoke'ing it.
+
+
+=cut
+
+=item B<set_addr>(out INT, inconst INT)
+
+Sets register $1 to the current address plus the offset $2.
+
+=item B<set_addr>(in PMC, inconst INT)
+
+Sets PMC in register $1 to the current address plus the offset $2.
+
+=item B<get_addr>(out INT, in PMC)
+
+Sets $1 to the absolute address of the Sub-PMC $2.
+
+
+=cut
+
+=item B<newsub>(out PMC, in INT, inconst INT)
+
+Generate a new subroutine object in $1 of class $2 and label $3.
+
+=item B<newsub>(in INT, in INT, inconst INT, inconst INT)
+
+Generate a new subroutine object in P0 of class $1 subroutine label $3 and
+a return continuation in P1 of class $2 and return address $4.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Exception handling
+
+=over 4
+
+=item B<set_eh>(in PMC)
+
+Push the exception handler in $1 on the control stack.
+
+=item B<clear_eh>()
+
+Clear out the most recently placed exception.
+
+=item B<throw>(in PMC)
+
+Throw the exception in $1.
+
+=item B<rethrow>(in PMC)
+
+Only valid inside an exception handler. Rethrow the exception $1.
+
+=item B<die_hard>(in INT, in INT)
+
+Die with severity $1 and error $2.
+
+=item B<exit>(in INT)
+
+Exit the interpreter with exit_status $1. If you want to communicate an
+extended exit status, create an exception with severity B<EXCEPT_exit>
+and throw it.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Interpreter operations
+
+These operations inspect or modify the interpreter itself, possibly
+affecting its subsequent operation.
+
+=over 4
+
+
+=cut
+
+=item B<debug>(in INT)
+
+If $1 is zero, turn off debugging. Otherwise turn it on.
+
+
+=cut
+
+=item B<bounds>(in INT)
+
+If $1 is zero, turn off byte code bounds checking. Otherwise turn it on.
+
+
+=cut
+
+=item B<profile>(in INT)
+
+If $1 is zero, turn off profiling. Otherwise turn it on.
+
+
+=cut
+
+=item B<trace>(in INT)
+
+If $1 is zero, turn off tracing. Otherwise turn it on.
+
+
+=cut
+
+=item B<gc_debug>(in INT)
+
+If $1 is zero, turn off GC_DEBUG. Otherwise turn it on.
+
+
+=cut
+
+=item B<interpinfo>(out INT, in INT)
+
+Fetch some piece of information about the interpreter and put it in $1.
+Possible values for $2 are:
+
+=over 4
+
+=item 1 The total amount of allocatable memory allocated. This figure
+does not include memory used for headers or for the interpreter's internal
+structures.
+
+=item 2 The number of dead object detection runs performed.
+
+=item 3 The number of garbage collection runs performed.
+
+=item 4 The number of active PMCs.
+
+=item 5 The number of active buffers.
+
+=item 6 The total number of PMCs allocated.
+
+=item 7 The total number of buffers allocated.
+
+=item 8 The number of headers (PMC or buffer) that have been allocated
+since the last DOD run.
+
+=item 9 The number of new blocks of memory allocated since the last GC run.
+
+=item 10 The total amount of memory copied during garbage collections.
+
+=back
+
+
+=cut
+
+=item B<warningson>(in INT)
+
+Turns on warnings categories. Categories already turned on will
+stay on. Initial setting is currently all warnings off.
+Current categories are (include "warnings.pasm"):
+
+=over 4
+
+=item .PARROT_WARNINGS_UNDEF_FLAG
+
+=item .PARROT_WARNINGS_IO_FLAG
+
+=item .PARROT_WARNINGS_PLATFORM_FLAG
+
+=item .PARROT_WARNINGS_ALL_FLAG
+
+=back
+
+To turn on multiple categories, OR the category numbers together.
+
+
+=cut
+
+=item B<warningsoff>(in INT)
+
+Turns off warnings categories.  Categories already turned off will
+stay off.  See the documentation for B<warningson> for category
+numbers.
+
+
+=cut
+
+=item B<errorson>(in INT)
+
+Turns on error categories. Categories already turned on will
+stay on. Current default setting is PARROT_ERRORS_GLOBALS_FLAG is on.
+Current categories are (include "errors.pasm"):
+
+=over 4
+
+=item .PARROT_ERRORS_GLOBALS_FLAG
+
+Throw an exception, if global doesn't exist.
+
+=item .PARROT_ERRORS_ALL_FLAG
+
+=back
+
+To turn on multiple categories, OR the category numbers together.
+
+
+=cut
+
+=item B<errorsoff>(in INT)
+
+Turns off errors categories.  Categories already turned off will
+stay off.  See the documentation for B<errorson> for category
+numbers.
+
+
+=cut
+
+=item B<runinterp>(in PMC, in INT)
+
+Run the code starting at offset $2 within interpreter $1.
+
+=item B<getinterp>(out PMC)
+
+Get the current ParrotInterpreter.
+
+
+=cut
+
+=item B<setline>(in INT)
+
+Set the line number for which we're currently executing code.
+
+
+=cut
+
+=item B<getline>(out INT)
+
+Get the current line number.
+
+
+=cut
+
+=item B<setfile>(in STR)
+
+Set the name of the file for which we're currently executing code.
+
+
+=cut
+
+=item B<getfile>(out STR)
+
+Get the name of the current file.
+
+
+=cut
+
+=item B<setpackage>(in STR)
+
+Set the name of the package for which we're currently executing code.
+
+
+=cut
+
+=item B<getpackage>(out STR)
+
+Get the name of the current package.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Dead Object Detection/Garbage Collection
+
+Opcodes that interact with the DOD and GC subsystems.
+
+=over 4
+
+
+=cut
+
+=item B<sweep>(inconst INT)
+
+0 ...  Trigger a DOD run only if there are things that have flagged
+       themselves as really needing to be collected.
+1 ...  Trigger a dead object detection (DOD) sweep unconditionally.
+
+
+=cut
+
+=item B<collect>()
+
+Trigger a garbage collection.
+
+
+=cut
+
+=item B<sweepoff>()
+
+Disable DOD sweeps. (Nestable)
+
+
+=cut
+
+=item B<sweepon>()
+
+Re-enable DOD sweeps.
+
+
+=cut
+
+=item B<collectoff>()
+
+Disable GC runs (nestable).
+
+
+=cut
+
+=item B<collecton>()
+
+Re-enable GC.
+
+
+=cut
+
+=item B<needs_destroy>(in PMC)
+
+Mark the PMC wanting destruction as soon as possible, i.e.
+when unused during the lazy sweep, triggered by "sweep 0".
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Function Utility ops
+
+Opcodes for handling function parameters, validating parameters, type
+and prototype checking, and generic whatnots.
+
+=over 4
+
+
+=cut
+
+=item B<foldup>(out PMC)
+
+Take all the PMCs passed in as parameters and stick them into an Array
+PMC, in the register pointed to.
+
+B<NOTE!> IMCC and PDD03 aren't yet in conformance. This uses the current
+IMCC setup, but should be changed as soon as IMCC modified to the correct
+calling conventions.
+
+=item B<foldup>(out PMC, in INT)
+
+Take all the PMCs passed in as parameters, starting at offset $2 and
+stick them into an Array PMC in $1.
+
+B<NOTE!> IMCC and PDD03 aren't yet in conformance. This uses the current
+IMCC setup, but should be changed as soon as IMCC modified to the correct
+calling conventions.
+
+=back
+
+
+=cut
+
+=head2 Native Call Interface
+
+Opcodes for interfacing with C functions in shared libraries.
+
+=over 4
+
+
+=cut
+
+=item B<loadlib>(out PMC, in STR)
+
+Load a dynamic link library named $2 and store it in $1.
+
+=item B<dlfunc>(out PMC, in PMC, in STR, in STR)
+
+Look up symbol $3 in library $2 with signature $4, and put the
+corresponding sub object in $1. Note that you need the signature so we
+can build or find an appropriate thunking function.
+
+=item B<dlvar>(out PMC, in PMC, in STR)
+
+Look up symbol $3 in library $2. We assume that this is actually a
+variable address rather than a function address, and build an
+unmanagedstruct PMC and stick the address into its data pointer.
+
+=item B<compile>(out PMC, in PMC, in STR)
+
+Compile source code $3 with compiler $2 into PMC $1.
+
+=item B<compreg>(out PMC, in STR)
+
+Get a compiler for source type $2.
+
+=item B<compreg>(in STR, in PMC)
+
+Register the sub $2 as a compiler for source type $1.
+$2 is either a NCI PMC with signature "pIt" or a PASM Sub.
+
+=item B<new_callback>(out PMC, in PMC, in PMC, in STR)
+
+Create a callback stub $1 for PASM subroutine $2 with userdata $3 and
+function signature $4.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

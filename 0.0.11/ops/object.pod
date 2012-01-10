@@ -1,0 +1,138 @@
+=head1 NAME
+
+object.ops
+
+
+=cut
+
+=head1 DESCRIPTION
+
+Parrot's library of object ops
+
+=over 4
+
+
+=cut
+
+=item B<callmeth>()
+
+Call a method on an object as per Parrot's calling conventions. We assume
+that all the registers are properly set up.
+
+
+=cut
+
+=item B<callmethcc>
+
+Take the continuation for the next instruction, put it in P1, then call the
+method as per the calling conventions.
+
+
+=cut
+
+=item B<tailcallmeth>
+
+Restore the continuation in P1 then call the method as per the calling
+conventions.
+
+
+=cut
+
+=item B<can>(out INT, in PMC, in STR)
+
+Sets $1 to true or false, depending on whether $2 ->can the method in
+$3
+
+
+=cut
+
+=item B<does>(out INT, in PMC, in STR)
+
+Sets $1 to true or false, depending on whether $2 ->does the interface in
+$3
+
+
+=cut
+
+=item B<newclass>(out PMC, in STR)
+
+Creates a new Parrot-style class, named $2, and puts the new PMC for it
+into $1. (This is a real out--the contents of $1 are ignored and the 
+pointer for the new PMC is put in there). 
+
+
+=cut
+
+=item B<subclass>(out PMC, in PMC)
+
+=item B<subclass>(out PMC, in PMC, in STR)
+
+=item B<subclass>(out PMC, in STR)
+
+=item B<subclass>(out PMC, in STR, in STR)
+
+Create a new class, put in $1, that is a subclass of $2. $3, if available,
+is the name of the new class--if not, the subclass is an anonymous subclass.
+
+$1 is replaced--a new PMC for the subclass is generated and put in it.
+
+
+=cut
+
+=item B<findclass>(out INT, in STR)
+
+Returns 1 if the class exists, 0 if it does not.
+
+
+=cut
+
+=item B<getclass>(out PMC, in STR)
+
+Find the PMC for a class, by name. Note that this is a one-level hash, so for
+classes that have some structure you need to impose that structure externally.
+
+Parrot's conventions are that level separators are noted with the NULL
+character, so Perl's Foo::Bar would be Foo\0Bar.
+
+
+=cut
+
+=item B<singleton>(in PMC) 
+
+Take the object in $1 and put it into its own singleton class, which is
+an anonymous subclass of the object's current class.
+
+
+=cut
+
+=item B<class>(out PMC, in PMC) 
+
+Get the class PMC for the object in $2 and put it in $1.
+
+
+=cut
+
+=item B<classname>(out STR, in PMC)
+
+Get the class name for the class in $2 and put it in $1
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

@@ -1,0 +1,243 @@
+=head1 NAME
+
+set.ops - Register Loading Ops
+
+=head1 DESCRIPTION
+
+These operations all set registers to various values.
+
+=over 4
+
+
+=cut
+
+=item B<clone>(out STR, in STR)
+
+Make a clone of $2, and put it in $1. Doesn't affect what was in
+$1. Removes the constant flag on the copy, if there was one.
+
+
+=cut
+
+=item B<exchange>(inout INT, inout INT)
+
+=item B<exchange>(inout NUM, inout NUM)
+
+=item B<exchange>(inout PMC, inout PMC)
+
+=item B<exchange>(inout STR, inout STR)
+
+Exchange the contents of registers $1 and $2
+
+
+=cut
+
+=item B<set>(out INT, in INT)
+
+=item B<set>(out INT, in NUM)
+
+=item B<set>(out INT, in PMC)
+
+=item B<set>(out INT, in STR)
+
+=item B<set>(out NUM, in INT)
+
+=item B<set>(out NUM, in NUM)
+
+=item B<set>(out NUM, in PMC)
+
+=item B<set>(out NUM, in STR)
+
+=item B<set>(in PMC, in INT)
+
+=item B<set>(in PMC, in NUM)
+
+=item B<set>(out PMC, in PMC)
+
+=item B<set>(in PMC, in STR)
+
+=item B<set>(out STR, in INT)
+
+=item B<set>(out STR, in NUM)
+
+=item B<set>(out STR, in PMC)
+
+=item B<set>(out STR, in STR)
+
+Set $1 to $2.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 PMC assignment operations: Px = x
+
+=over 4
+
+=item B<assign>(in PMC, in INT)
+
+=item B<assign>(in PMC, in NUM)
+
+=item B<assign>(in PMC, in PMC)
+
+=item B<assign>(in PMC, in STR)
+
+Assign a new value to a string by reusing the string header.
+
+=item B<assign>(out STR, in STR)
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Keyed set operations: Px[ INTKEY ] = Bx
+
+=over 4
+
+=item B<set>(in PMC, in INTKEY, in INT)
+
+=item B<set>(in PMC, in INTKEY, in NUM)
+
+=item B<set>(in PMC, in INTKEY, in STR)
+
+=item B<set>(in PMC, in INTKEY, in PMC)
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Keyed get operations: Ax = Px[ INTKEY ]
+
+=over 4
+
+=item B<set>(out INT, in PMC, in INTKEY)
+
+=item B<set>(out NUM, in PMC, in INTKEY)
+
+=item B<set>(out STR, in PMC, in INTKEY)
+
+=item B<set>(out PMC, in PMC, in INTKEY)
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Keyed set operations: Px[ KEY ] = Bx
+
+=over 4
+
+=item B<set>(in PMC, in KEY, in INT)
+
+=item B<set>(in PMC, in KEY, in NUM)
+
+=item B<set>(in PMC, in KEY, in STR)
+
+=item B<set>(in PMC, in KEY, in PMC)
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Keyed get operations: Ax = Px[ KEY ]
+
+=over 4
+
+=item B<set>(out INT, in PMC, in KEY)
+
+=item B<set>(out NUM, in PMC, in KEY)
+
+=item B<set>(out STR, in PMC, in KEY)
+
+=item B<set>(out PMC, in PMC, in KEY)
+
+
+=cut
+
+=item B<clone>(out PMC, in PMC)
+
+Makes a copy of the PMC in $2 and puts it in $1.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head2 Register operations
+
+These operations effect entire sets of registers.
+
+=over 4
+
+
+=cut
+
+=item B<null>(out STR)
+
+=item B<null>(out INT)
+
+=item B<null>(out PMC)
+
+=item B<null>(out NUM)
+
+Set register $1 to a null value, or zero for the numeric registers
+
+
+=cut
+
+=item B<cleari>()
+
+=item B<clearn>()
+
+=item B<clearp>()
+
+=item B<clears>()
+
+Clear all the registers of the type indicated in the name of the operation.
+
+INTVAL ('i') and FLOATVAL ('n') registers clear to zero.
+
+PMC ('p') and STRING ('s') registers clear to NULL.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

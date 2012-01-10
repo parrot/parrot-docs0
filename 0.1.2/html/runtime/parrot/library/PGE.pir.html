@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>main module for the Parrot Grammar Engine</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">main module for the Parrot Grammar Engine</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../../html/index.html">Contents</a> | <a href="../../../../html/libs.html">Libraries</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="TITLE"
+>TITLE <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>PGE.pir &#45; main module for the Parrot Grammar Engine</p>
+
+<h1><a name="SYNOPSIS"
+>SYNOPSIS <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<pre lang='und' xml:lang='und'>    ...
+    .local pmc pgec
+    loadbytecode &#34;pge.pir&#34;
+    pgec = global &#34;_pge_compile&#34;
+    ...
+    rule = pgec(&#34;^(From|To):&#34;)
+    match = rule($S0)
+    ...</pre>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>This module contains the routines and constants necessary to use the Parrot Grammar Engine.</p>
+
+<h1><a name="FUNCTIONS"
+>FUNCTIONS <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="rulesub_=_p6rule(_pattern_)"
+>rulesub = p6rule( pattern )</a></dt><p class="pad"></p>
+
+<dt><a name="(rulesub,_pir)_=_p6rule(_pattern_)"
+>(rulesub, pir) = p6rule( pattern )</a></dt><p class="pad"></p>
+
+<dd>Compiles a string containing a pattern into a subroutine that can be used to match strings containing the pattern. The first form simply returns a subroutine; the second form also returns a string containing the intermediate PIR code that was generated to produce the subroutine.</dd><p class="pad"></p>
+
+<dt><a name="rulesub_=_p5re(_pattern_)"
+>rulesub = p5re( pattern )</a></dt><p class="pad"></p>
+
+<dt><a name="(rulesub,_pir)_=_p5re(_pattern_)"
+>(rulesub, pir) = p5re( pattern )</a></dt><p class="pad"></p>
+
+<dd>Compiles a string containing a pattern into a subroutine that can be used to match strings containing the pattern. The first form simply returns a subroutine; the second form also returns a string containing the intermediate PIR code that was generated to produce the subroutine.</dd><p class="pad"></p>
+
+<dt><a name="rulesub_=_pge_glob(_pattern_)"
+>rulesub = pge_glob( pattern )</a></dt><p class="pad"></p>
+
+<dt><a name="(rulesub,_pir)_=_pge_glob(_pattern_)"
+>(rulesub, pir) = pge_glob( pattern )</a></dt><p class="pad"></p>
+
+<dd>Compiles a string containing a glob pattern into a subroutine that can be used to match strings containing the pattern. The first form simply returns a subroutine; the second form also returns a string containing the intermediate PIR code that was generated to produce the subroutine.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="AUTHOR"
+>AUTHOR <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Patrick Michaud (pmichaud@pobox.com) is the author and maintainer. Patches and suggestions should be sent to the Perl 6 compiler list (perl6&#45;compiler@perl.org).</p>
+
+<h1><a name="COPYRIGHT"
+>COPYRIGHT <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Copyright (c) 2004, The Perl Foundation.</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

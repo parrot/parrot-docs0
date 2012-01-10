@@ -1,0 +1,220 @@
+=head1 PackFile Manipulation Functions
+
+This file, C<packfile.c> contains all the functions required
+for the processing of the structure of a PackFile. It is not
+intended to understand the byte code stream itself, but merely
+to dissect and reconstruct data from the various segments.
+See L<parrotbyte> for information about the structure of the
+frozen bycode.
+
+=head2 PackFile Structure Functions
+
+=over 4
+
+=item new
+
+Allocate a new empty PackFile.
+
+
+=cut
+
+=item fetch_op
+
+Fetch an opcode_t from the stream, converting
+byteorder if needed.
+
+
+=cut
+
+=item fetch_iv
+
+Fetch an INTVAL from the stream, converting
+byteorder if needed.
+
+
+=cut
+
+=item fetch_nv
+
+Fetch a FLOATVAL from the stream, converting
+byteorder if needed.
+
+
+=cut
+
+=item destroy
+
+Delete a PackFile.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile from a block of memory. The format is:
+
+  byte     wordsize
+  byte     byteorder
+  byte     major
+  byte     minor
+  byte     flags
+  byte     floattype
+  byte     pad[10]
+
+  opcode_t magic
+
+  opcode_t segment_length
+  *  fixup_segment
+
+  opcode_t segment_length
+  *  const_segment
+
+  opcode_t segment_length
+  *  byte_code
+
+Checks to see if the magic matches the Parrot magic number for
+Parrot PackFiles.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+=head2 PackFile FixupTable Structure Functions
+
+=over 4
+
+=item clear
+
+Clear a PackFile FixupTable.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile FixupTable from a block of memory.
+
+NOTE: There is no format defined for FixupTables yet.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+=head2 PackFile ConstTable Structure Functions
+
+=over 4
+
+=item clear
+
+Clear a PackFile ConstTable.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile ConstTable from a block of memory. The format is:
+
+  opcode_t const_count
+  *  constants
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+=head2 PackFile Constant Structure Functions
+
+=over 4
+
+=item new
+
+Allocate a new empty PackFile Constant.
+This is only here so we can make a new one and then do an unpack.
+
+
+=cut
+
+=item destroy
+
+Delete a PackFile Constant.
+
+
+=cut
+
+=item pack_size
+
+Determine the size of the buffer needed in order to pack the PackFile 
+Constant into a contiguous region of memory.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile Constant from a block of memory. The format is:
+
+  opcode_t type
+  opcode_t size
+  *  data
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_number
+
+Unpack a PackFile Constant number from a block of memory. The format is:
+
+  FLOATVAL value
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_string
+
+Unpack a PackFile Constant from a block of memory. The format is:
+
+  opcode_t flags
+  opcode_t encoding
+  opcode_t type
+  opcode_t size
+  *  data
+
+The data is expected to be zero-padded to an opcode_t-boundary, so any
+pad bytes are removed.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_key
+
+Unpack a PackFile Constant from a block of memory. The format consists
+of a sequence of key atomes, each with the following format:
+
+  opcode_t type
+  opcode_t value
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+
+=cut
+

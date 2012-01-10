@@ -1,0 +1,284 @@
+=head1 PackFile Manipulation Functions
+
+This file, C<packfile.c> contains all the functions required
+for the processing of the structure of a PackFile. It is not
+intended to understand the byte code stream itself, but merely
+to dissect and reconstruct data from the various segments.
+See L<parrotbyte> for information about the structure of the
+frozen bycode.
+
+
+=item fetch_op
+
+Fetch an opcode_t from the stream, converting
+byteorder if needed.
+
+
+=cut
+
+=item fetch_iv
+
+Fetch an INTVAL from the stream, converting
+byteorder if needed.
+
+
+=cut
+
+=item fetch_cstring
+
+Fetch a cstring from bytecode and return an allocated copy
+
+
+=cut
+
+=item fetch_nv
+
+Fetch a FLOATVAL from the stream, converting
+byteorder if needed. Then advance stream pointer by
+amount of packfile float size.
+
+
+=cut
+
+=item destroy
+
+Delete a PackFile.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile from a block of memory. The format is:
+
+  byte     wordsize
+  byte     byteorder
+  byte     major
+  byte     minor
+  byte     flags
+  byte     floattype
+  byte     pad[10] = fingerprint
+
+  opcode_t magic
+  opcode_t language type
+
+  opcode_t segment_length
+  *  fixup_segment
+
+  if fixup segment_length != 0, a directory is here and used for
+  the rest of the file
+    directory segment
+    * segment
+    ....
+
+  All new segments have this common header:
+  - op_count    ... total segment size incl. this count
+  - itype        ... internal type of data
+  - id          ... id of data e.g. byte code nr.
+  - size        ... size of data oparray
+  - data[size]  ... data array e.g. bytecode
+  segment specific data follow here
+
+
+  else:
+
+  opcode_t segment_length
+  *  const_segment
+
+  opcode_t segment_length
+  *  byte_code
+
+
+Checks to see if the magic matches the Parrot magic number for
+Parrot PackFiles.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=head2 PackFile Structure Functions
+
+=over 4
+
+=item PackFile_new
+
+Allocate a new empty PackFile.
+Setup directory and 2 default segments: CONSTANT, BYTECODE
+
+Directory segment:
+
+  +----------+----------+----------+----------+
+  |    Segment Header                         |
+  |    ..............                         |
+  +----------+----------+----------+----------+
+
+  +----------+----------+----------+----------+
+  |    number of directory items              |
+  +----------+----------+----------+----------+
+
+  followed by a sequence of items
+  +----------+----------+----------+----------+
+  |    Segment type                           |
+  +----------+----------+----------+----------+
+  |    "name"                                 |
+  |    ...     '\0'       padding bytes       |
+  +----------+----------+----------+----------+
+  |    Offset in the file                     |
+  +----------+----------+----------+----------+
+  |    Size of the segment                    |
+  +----------+----------+----------+----------+
+
+name is a NUL-terminated c-string encoded in
+plain ASCII.
+Segment Types  are defined in packfile.h.
+offset and size are in opcode_t
+
+A Segment Header has these entries:
+
+ - op_count     total ops of segment incl. this count
+ - itype        internal type of segment
+ - id           internal id e.g code seg nr
+ - size         size of following op array, 0 if non
+ * data         possibly empty data, or e.g. byte code
+
+
+=cut
+
+=back
+
+=head2 PackFile FixupTable Structure Functions
+
+=over 4
+
+=item clear
+
+Clear a PackFile FixupTable.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile FixupTable from a block of memory.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+=head2 PackFile ConstTable Structure Functions
+
+=over 4
+
+=item clear
+
+Clear a PackFile ConstTable.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile ConstTable from a block of memory. The format is:
+
+  opcode_t const_count
+  *  constants
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+=head2 PackFile Constant Structure Functions
+
+=over 4
+
+=item new
+
+Allocate a new empty PackFile Constant.
+This is only here so we can make a new one and then do an unpack.
+
+
+=cut
+
+=item destroy
+
+Delete a PackFile Constant.
+Dont't delete PMCs or STRINGs, they are destroyed via DOD/GC.
+
+
+=cut
+
+=item pack_size
+
+Determine the size of the buffer needed in order to pack the PackFile
+Constant into a contiguous region of memory.
+
+
+=cut
+
+=item unpack
+
+Unpack a PackFile Constant from a block of memory. The format is:
+
+  opcode_t type
+  opcode_t size
+  *  data
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_number
+
+Unpack a PackFile Constant number from a block of memory. The format is:
+
+  FLOATVAL value
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_string
+
+Unpack a PackFile Constant from a block of memory. The format is:
+
+  opcode_t flags
+  opcode_t encoding
+  opcode_t type
+  opcode_t size
+  *  data
+
+The data is expected to be zero-padded to an opcode_t-boundary, so any
+pad bytes are removed.
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=item unpack_key
+
+Unpack a PackFile Constant from a block of memory. The format consists
+of a sequence of key atomes, each with the following format:
+
+  opcode_t type
+  opcode_t value
+
+Returns one (1) if everything is OK, else zero (0).
+
+
+=cut
+
+=back
+
+
+=cut
+

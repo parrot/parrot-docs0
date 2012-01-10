@@ -1,0 +1,205 @@
+=head1 NAME
+
+bit.ops - Bitwise Operations
+
+=head1 DESCRIPTION
+
+Operations that deal with bits directly, either individually
+or in groups.
+
+The variant with an appended B<s> like B<bands> work on strings.
+
+=over 4
+
+
+=cut
+
+=item B<band>(inout INT, in INT)
+
+=item B<band>(in PMC, in INT)
+
+=item B<band>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<and> of the corresponding bits from $1 and $2.
+
+=item B<band>(out INT, in INT, in INT)
+
+=item B<band>(in PMC, in PMC, in INT)
+
+=item B<band>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<and> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=item B<bands>(inout STR, in STR)
+
+=item B<bands>(in PMC, in STR)
+
+=item B<bands>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<and> of the corresponding bits from $1 and $2.
+
+=item B<bands>(out STR, in STR, in STR)
+
+=item B<bands>(in PMC, in PMC, in STR)
+
+=item B<bands>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<and> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=item B<bnot>(out INT, in INT)
+
+=item B<bnot>(in PMC, in PMC)
+
+Set the bits of $1 to the B<not> of the corresponding bits from $2.
+
+
+=cut
+
+=item B<bor>(inout INT, in INT)
+
+=item B<bor>(in PMC, in INT)
+
+=item B<bor>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<or> of the corresponding bits from $1 and $2.
+
+=item B<bor>(out INT, in INT, in INT)
+
+=item B<bor>(in PMC, in PMC, in INT)
+
+=item B<bor>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<or> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=item B<bors>(inout STR, in STR)
+
+=item B<bors>(in PMC, in STR)
+
+=item B<bors>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<or> of the corresponding bits from $1 and $2.
+
+=item B<bors>(out STR, in STR, in STR)
+
+=item B<bors>(in PMC, in PMC, in STR)
+
+=item B<bors>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<or> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=item B<shl>(inout INT, in INT)
+
+=item B<shl>(in PMC, in INT)
+
+=item B<shl>(in PMC, in PMC)
+
+Shift left $1 by $2 bits.
+
+=item B<shl>(out INT, in INT, in INT)
+
+=item B<shl>(in PMC, in PMC, in PMC)
+
+=item B<shl>(in PMC, in PMC, in INT)
+
+Set $1 to the value of $2 shifted left by $3 bits.
+
+
+=cut
+
+=item B<shr>(inout INT, in INT)
+
+=item B<shr>(in PMC, in INT)
+
+=item B<shr>(in PMC, in PMC)
+
+Shift right $1 by $2 bits.
+
+=item B<shr>(out INT, in INT, in INT)
+
+=item B<shr>(in PMC, in PMC, in PMC)
+
+=item B<shr>(in PMC, in PMC, in INT)
+
+Set $1 to the value of $2 shifted right by $3 bits.
+
+
+=cut
+
+=item B<lsr>(inout INT, in INT)
+
+Logically shift $1 right by $2.
+
+=item B<lsr>(out INT, in INT, in INT)
+
+Set $1 to the value of $2 logically shifted right by $3 bits.
+
+
+=cut
+
+=item B<bxor>(inout INT, in INT)
+
+=item B<bxor>(in PMC, in INT)
+
+=item B<bxor>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<xor> of the corresponding bits from $1 and $2.
+
+=item B<bxor>(out INT, in INT, in INT)
+
+=item B<bxor>(in PMC, in PMC, in INT)
+
+=item B<bxor>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<xor> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=item B<bxors>(inout STR, in STR)
+
+=item B<bxors>(in PMC, in STR)
+
+=item B<bxors>(in PMC, in PMC)
+
+Set the bits of $1 according to the B<xor> of the corresponding bits from $1 and $2.
+
+=item B<bxors>(out STR, in STR, in STR)
+
+=item B<bxors>(in PMC, in PMC, in STR)
+
+=item B<bxors>(in PMC, in PMC, in PMC)
+
+Set the bits of $1 according to the B<xor> of the corresponding bits from $2 and $3.
+
+
+=cut
+
+=back
+
+
+=cut
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001-2003 The Perl Foundation.  All rights reserved.
+
+=head1 LICENSE
+
+This program is free software. It is subject to the same license
+as the Parrot interpreter itself.
+
+
+=cut
+

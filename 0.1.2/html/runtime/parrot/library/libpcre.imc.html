@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>pcre interface</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">pcre interface</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../../html/index.html">Contents</a> | <a href="../../../../html/libs.html">Libraries</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="TITEL"
+>TITEL <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>libpcre.imc &#45; pcre interface</p>
+
+<h1><a name="SYNOPSIS"
+>SYNOPSIS <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<pre lang='und' xml:lang='und'>  .include &#34;library/pcre.imc&#34;
+  .PCRE_INIT(lib)
+  .PCRE_COMPILE(pattern, options, regex, error, errptr)
+  .PCRE_MATCH(regex, string, nres, ovector)
+  .PCRE_DOLLAR(string, ok, ovector, n, match)</pre>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Above macros call functions in libpcre.imc.</p>
+
+<dl>
+<dt><a name="macro_PCRE_INIT(var)"
+>macro PCRE_INIT(var)</a></dt><p class="pad"></p>
+
+<dd>Intialize the pcre library. The PMC <b>var</b> is set to the library handle and additionally stored as global &#34;pcre::lib&#34;.</dd><p class="pad"></p>
+
+<dt><a name="macro_PCRE_COMPILE((pattern,_options,_regex,_error,_errptr)"
+>macro PCRE_COMPILE((pattern, options, regex, error, errptr)</a></dt><p class="pad"></p>
+
+<dd>Compile the string <b>pattern</b> with int <b>options</b>. Returns var <b>regex</b> string <b>error</b> and int <b>errptr</b>.</dd><p class="pad"></p>
+
+<dt><a name="macro_PCRE_MATCH(regex,_str,_start,_options,_ok,_res)"
+>macro PCRE_MATCH(regex, str, start, options, ok, res)</a></dt><p class="pad"></p>
+
+<dd>Match the var <b>regex</b> against string <b>str</b> from int <b>start</b> with int <b>options</b>. Returns the number of matches in int <b>ok</b> and the ovector in var <b>res</b>.</dd><p class="pad"></p>
+
+<dt><a name="macro_PCRE_DOLLAR(str,_ok,_res,_n,_matched)"
+>macro PCRE_DOLLAR(str, ok, res, n, matched)</a></dt><p class="pad"></p>
+
+<dd>Extract from string <b>str</b> the int <b>n</b>th result into string <b>match</b>.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="FILES"
+>FILES <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>pcre.imc, libpcre.imc</p>
+
+<h1><a name="SEE_ALSO"
+>SEE ALSO <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>pcre(3)</p>
+
+<h1><a name="AUTHOR"
+>AUTHOR <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Leopold Toetsch</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

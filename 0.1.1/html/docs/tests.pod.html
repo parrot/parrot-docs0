@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Testing Parrot</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Testing Parrot</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../html/index.html">Contents</a> | <a href="../../html/docs.html">Documentation</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="NAME"
+>NAME <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p>docs/tests.pod &#45; Testing Parrot</p>
+
+<h1><a name="A_basic_guide_to_writing_tests_for_Parrot"
+>A basic guide to writing tests for Parrot <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p>This is quick and dirty pointer to how tests for Parrot should be written.
+The testing system is liable to change in the future,
+but tests written following the guidelines below should be easy to port into a new test suite.</p>
+
+<h1><a name="How_to_write_a_test"
+>How to write a test <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<h2><a name="Assembler_tests"
+>Assembler tests <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h2>
+
+<p>First,
+find an appropriate file in <em lang='und' xml:lang='und'>t/op/*.t</em> (for basic ops),
+<em lang='und' xml:lang='und'>t/pmc/*.t</em> (for anything to do with PMCs),
+and <em lang='und' xml:lang='und'>t/src/*.t</em> for C source code tests.
+If there isn&#39;t an appropriate file,
+create one.</p>
+
+<p>Near the top of each file,
+you&#39;ll see a line like:</p>
+
+<pre lang='und' xml:lang='und'>  use Parrot::Test tests =&#62; 8;</pre>
+
+<p>This sets up the test harness used to assemble and run the tests, and lets it know how many tests you plan to run. New tests should be added by:</p>
+
+<p>1. Incrementing the number of planned tests.</p>
+
+<p>2. Putting some code in like this:</p>
+
+<pre lang='und' xml:lang='und'>    output_is(&#60;&#60;&#39;CODE&#39;, &#60;&#60;&#39;OUTPUT&#39;, &#34;name for test&#34;);
+        *** a big chunk of assembler, eg:
+        print   1
+        print   &#34;\n&#34; # you can even comment it if it&#39;s obscure
+        end          # don&#39;t forget this...!
+    CODE
+    *** what you expect the output of the chunk to be, eg.
+    1
+    OUTPUT</pre>
+
+<p>Tests in <em lang='und' xml:lang='und'>t/op/</em> or <em lang='und' xml:lang='und'>t/pmc/</em> are considered to be <b>PASM</b> tests. Tests in <em lang='und' xml:lang='und'>imcc/t/</em> are assumed to be <b>PIR</b> tests. You can put <b>PIR</b> tests into <em lang='und' xml:lang='und'>t/op/</em> or <em lang='und' xml:lang='und'>t/pmc/</em> by inserting the special comment <b>##PIR##</b> in the test code:</p>
+
+<pre lang='und' xml:lang='und'>    output_is(&#60;&#60;&#39;CODE&#39;, &#60;&#60;&#39;OUTPUT&#39;, &#34;name for test&#34;);
+    ##PIR##
+        $P0 = new Integer
+    ...</pre>
+
+<h2><a name="C_source_tests"
+>C source tests <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h2>
+
+<pre lang='und' xml:lang='und'>    c_output_is(&#60;&#60;&#39;CODE&#39;, &#60;&#60;&#39;OUTPUT&#39;, &#34;name for test&#34;);
+    #include &#60;stdio.h&#62;
+    #include &#34;parrot/parrot.h&#34;
+    #include &#34;parrot/embed.h&#34;
+
+    static opcode_t *the_test(Parrot_Interp, opcode_t *, opcode_t *);
+
+    int main(int argc, char* argv[]) {
+        Parrot_Interp interpreter;
+        interpreter = Parrot_new(NULL);
+
+        if (!interpreter)
+        return 1;
+
+        Parrot_init(interpreter);
+        Parrot_run_native(interpreter, the_test);
+        printf(&#34;done\n&#34;);
+    fflush(stdout);
+        return 0;
+    }
+
+    static opcode_t*
+    the_test(Parrot_Interp interpreter,
+        opcode_t *cur_op, opcode_t *start)
+    {
+        /* Your test goes here. */
+
+        return NULL;  /* always return NULL */
+    }
+    CODE
+    # Anything that might be output prior to &#34;done&#34;.
+    done
+    OUTPUT</pre>
+
+<p>Note, it&#39;s always a good idea to output &#34;done&#34; to confirm that the compiled code executed completely. When mixing <code lang='und' xml:lang='und'>printf</code> and <code lang='und' xml:lang='und'>PIO_printf</code> always append a <code lang='und' xml:lang='und'>fflush(stdout);</code> after the former.</p>
+
+<h1><a name="Ideal_tests:"
+>Ideal tests: <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="o"
+>o</a></dt><p class="pad"></p>
+
+<dd>Probe the boundaries (including edge cases, errors thrown etc.) of whatever code they&#39;re testing. These should include potentially out of band input unless we decide that compilers should check for this themselves.</dd><p class="pad"></p>
+
+<dt><a name="o"
+>o</a></dt><p class="pad"></p>
+
+<dd>Are small and self contained, so that if the tested feature breaks we can identify where and why quickly.</dd><p class="pad"></p>
+
+<dt><a name="o"
+>o</a></dt><p class="pad"></p>
+
+<dd>Are valid. Essentially, they should conform to the additional documentation that accompanies the feature (if any). [If there isn&#39;t any documentation, then feel free to add some and/or complain to the mailing list].</dd><p class="pad"></p>
+
+<dt><a name="o"
+>o</a></dt><p class="pad"></p>
+
+<dd>Are a chunk of assembler and a chunk of expected output.</dd><p class="pad"></p>
+</dl>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Untitled</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Untitled</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../html/index.html">Contents</a> | <a href="../../html/dynapmc.html">Dynamic PMCs</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<dl>
+<dt><a name="static_PMC_*_Parrot_TclList_set_pmc_ptr(Interp_*interpreter,_List_*list,_INTVAL_key)"
+><b><code lang='und' xml:lang='und'>static PMC *Parrot_TclList_set_pmc_ptr(Interp *interpreter, List *list, INTVAL key)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the PMC pointer for the element at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="static_PMC*_retval(Interp_*interpreter,_void_*ret)"
+><b><code lang='und' xml:lang='und'>static PMC *retval(Interp *interpreter, void *ret)</b></code></a></dt><p class="pad"></p>
+
+<dd>Processes <code lang='und' xml:lang='und'>*ret</code>,
+returning the appropriate PMC,
+or raising an exception if necessary.</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="Methods"
+>Methods <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="void_set_integer_keyed_int(INTVAL_key,_INTVAL_value)"
+><b><code lang='und' xml:lang='und'>void set_integer_keyed_int(INTVAL key, INTVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Converts <code lang='und' xml:lang='und'>value</code> to a <code lang='und' xml:lang='und'>TclInt</code> and assigns it to the array at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_integer_keyed(PMC_*key,_INTVAL_value)"
+><b><code lang='und' xml:lang='und'>void set_integer_keyed(PMC *key, INTVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>value</code> to the array at index <code lang='und' xml:lang='und'>*key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_number_keyed_int(INTVAL_key,_FLOATVAL_value)"
+><b><code lang='und' xml:lang='und'>void set_number_keyed_int(INTVAL key, FLOATVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>value</code> to the array at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_number_keyed(PMC_*key,_FLOATVAL_value)"
+><b><code lang='und' xml:lang='und'>void set_number_keyed(PMC *key, FLOATVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>value</code> to the array at index <code lang='und' xml:lang='und'>*key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_string_keyed_int(INTVAL_key,_STRING_*value)"
+><b><code lang='und' xml:lang='und'>void set_string_keyed_int(INTVAL key, STRING *value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>*value</code> to the array at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_string_keyed_(PMC_*key,_STRING_*value)"
+><b><code lang='und' xml:lang='und'>void set_string_keyed (PMC *key, STRING *value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>*value</code> to the array at index <code lang='und' xml:lang='und'>*key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_pmc_keyed_int(INTVAL_key,_PMC_*src)"
+><b><code lang='und' xml:lang='und'>void set_pmc_keyed_int(INTVAL key, PMC *src)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>*src</code> to the array at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_set_pmc_keyed_(PMC_*key,_PMC_*value)"
+><b><code lang='und' xml:lang='und'>void set_pmc_keyed (PMC *key, PMC *value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Assigns <code lang='und' xml:lang='und'>*value</code> to the array at index <code lang='und' xml:lang='und'>*key</code>.</dd><p class="pad"></p>
+
+<dt><a name="INTVAL_get_integer_keyed_int(INTVAL_key)"
+><b><code lang='und' xml:lang='und'>INTVAL get_integer_keyed_int(INTVAL key)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the integer value of the element at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="FLOATVAL_get_number_keyed_int(INTVAL_key)"
+><b><code lang='und' xml:lang='und'>FLOATVAL get_number_keyed_int(INTVAL key)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the floating&#45;point value of the element at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="STRING_*get_string()"
+><b><code lang='und' xml:lang='und'>STRING *get_string()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the number of elements in the array as a Parrot string.</dd><p class="pad"></p>
+
+<dt><a name="STRING_*get_string_keyed_int(INTVAL_key)"
+><b><code lang='und' xml:lang='und'>STRING *get_string_keyed_int(INTVAL key)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the Parrot string value of the element at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="PMC_*get_pmc_keyed_int(INTVAL_key)"
+><b><code lang='und' xml:lang='und'>PMC *get_pmc_keyed_int(INTVAL key)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the PMC value of the element at index <code lang='und' xml:lang='und'>key</code>.</dd><p class="pad"></p>
+
+<dt><a name="void_unshift_integer(INTVAL_value)"
+><b><code lang='und' xml:lang='und'>void unshift_integer(INTVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Extends the array by adding an element of value <code lang='und' xml:lang='und'>value</code> to the start of the array.</dd><p class="pad"></p>
+
+<dt><a name="void_unshift_float(FLOATVAL_value)"
+><b><code lang='und' xml:lang='und'>void unshift_float(FLOATVAL value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Extends the array by adding an element of value <code lang='und' xml:lang='und'>value</code> to the start of the array.</dd><p class="pad"></p>
+
+<dt><a name="void_unshift_string(STRING_*value)"
+><b><code lang='und' xml:lang='und'>void unshift_string(STRING *value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Extends the array by adding an element of value <code lang='und' xml:lang='und'>*value</code> to the start of the array.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="POD_ERRORS"
+>POD ERRORS <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p>Hey!
+<b>The above document had some coding errors,
+which are explained below:</b></p>
+
+<dl>
+<dt><a name="Around_line_30:"
+>Around line 30:</a></dt><p class="pad"></p>
+
+<dd>&#39;=item&#39; outside of any &#39;=over&#39;</dd><p class="pad"></p>
+</dl>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

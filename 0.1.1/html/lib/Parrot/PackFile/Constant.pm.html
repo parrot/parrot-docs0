@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Untitled</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Untitled</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../../html/index.html">Contents</a> | <a href="../../../../html/perl.html">Perl Modules</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="SYNOPSIS"
+>SYNOPSIS <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<pre lang='und' xml:lang='und'>  use Parrot::PackFile::Constant;</pre>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Instances of <code lang='und' xml:lang='und'>Parrot::PackFile::Constant</code> are used to represent constants in Parrot packfiles.</p>
+
+<h2><a name="Functions"
+>Functions <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h2>
+
+<p>Note that these functions are not exported.</p>
+
+<dl>
+<dt><a name="type_name($query)"
+><b><code lang='und' xml:lang='und'>type_name($query)</b></code></a></dt><p class="pad"></p>
+
+<dd>Return the type name for <code lang='und' xml:lang='und'>$query</code>.</dd><p class="pad"></p>
+
+<dt><a name="type_code($query)"
+><b><code lang='und' xml:lang='und'>type_code($query)</b></code></a></dt><p class="pad"></p>
+
+<dd>Return the type code for <code lang='und' xml:lang='und'>$query</code>.</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="Class_Methods"
+>Class Methods <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="new()"
+><b><code lang='und' xml:lang='und'>new()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns a new instance of type <code lang='und' xml:lang='und'>PFC_NONE</code>.</dd><p class="pad"></p>
+
+<dt><a name="new_integer()"
+><b><code lang='und' xml:lang='und'>new_integer()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns a new integer constant instance.</dd><p class="pad"></p>
+
+<dt><a name="new_number()"
+><b><code lang='und' xml:lang='und'>new_number()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns a new floating&#45;point number constant instance.</dd><p class="pad"></p>
+
+<dt><a name="new_string()"
+><b><code lang='und' xml:lang='und'>new_string()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns a new Parrot string constant instance.</dd><p class="pad"></p>
+</dl>
+
+<h2><a name="Instance_Methods"
+>Instance Methods <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="clear()"
+><b><code lang='und' xml:lang='und'>clear()</b></code></a></dt><p class="pad"></p>
+
+<dd>Sets the constant type to <code lang='und' xml:lang='und'>PFC_NONE</code>.</dd><p class="pad"></p>
+
+<dt><a name="type()"
+><b><code lang='und' xml:lang='und'>type()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the type of the constant.</dd><p class="pad"></p>
+
+<dt><a name="value()"
+><b><code lang='und' xml:lang='und'>value()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the value of the constant.</dd><p class="pad"></p>
+
+<dt><a name="unpack($string)"
+><b><code lang='und' xml:lang='und'>unpack($string)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpack from the string and return the number of characters that should be removed from the packed string.</dd><p class="pad"></p>
+
+<dt><a name="packed_size()"
+><b><code lang='und' xml:lang='und'>packed_size()</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the packed size of the constant.</dd><p class="pad"></p>
+
+<dt><a name="pack()"
+><b><code lang='und' xml:lang='und'>pack()</b></code></a></dt><p class="pad"></p>
+
+<dd>Packs the constant.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="SEE_ALSO"
+>SEE ALSO <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="Parrot::PackFile"
+><b><code lang='und' xml:lang='und'><a href='../PackFile.pm.html'>Parrot::PackFile</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::PackFile::ConstTable"
+><b><code lang='und' xml:lang='und'><a href='ConstTable.pm.html'>Parrot::PackFile::ConstTable</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::PackFile::FixupTable"
+><b><code lang='und' xml:lang='und'><a href='FixupTable.pm.html'>Parrot::PackFile::FixupTable</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="build_tools/pbc2c.pl"
+><em lang='und' xml:lang='und'><a href="../../../build_tools/pbc2c.pl.html">build_tools/pbc2c.pl</a></em></a></dt><p class="pad"></p>
+</dl>
+
+<h1><a name="HISTORY"
+>HISTORY <a href='#_top'><img alt='^' border=0 src='../../../../resources/up.gif'></a></a></h1>
+
+<p>Author: Gregor N. Purdy &#60;gregor@focusresearch.com&#62;</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

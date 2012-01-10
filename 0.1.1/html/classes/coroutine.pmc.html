@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Co&#45;Routine PMC</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Co&#45;Routine PMC</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../html/index.html">Contents</a> | <a href="../../html/pmc.html">PMCs</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="NAME"
+>NAME <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p>classes/coroutine.pmc &#45; Co&#45;Routine PMC</p>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p><code lang='und' xml:lang='und'>Coroutine</code> extends <code lang='und' xml:lang='und'>Continuation</code> to provide a subroutine that can stop in the middle,
+and start back up later at the point at which it stopped.
+See the <a href='TODO#glossary.pod'>Glossary</a> for more information.</p>
+
+<h2><a name="Flags"
+>Flags <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="private0_call_flip_flop"
+>private0 call flip flop</a></dt><p class="pad"></p>
+
+<dt><a name="private3_called_first_time,_used_for_python"
+>private3 called first time,
+used for python</a></dt><p class="pad"></p>
+</dl>
+
+<h2><a name="Methods"
+>Methods <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h2>
+
+<dl>
+<dt><a name="void_init()"
+><b><code lang='und' xml:lang='und'>void init()</b></code></a></dt><p class="pad"></p>
+
+<dd>Initializes the co&#45;routine.</dd><p class="pad"></p>
+
+<dt><a name="void_*invoke(void_*next)"
+><b><code lang='und' xml:lang='und'>void *invoke(void *next)</b></code></a></dt><p class="pad"></p>
+
+<dd>Swaps the &#34;context&#34;.</dd><p class="pad"></p>
+
+<dt><a name="PMC*_shift_pmc)"
+><b><code lang='und' xml:lang='und'>PMC *shift_pmc</b></code>)</a></dt><p class="pad"></p>
+
+<dd>Run the coroutine until it yields a value.
+The call to the coroutine is actually done via the <code lang='und' xml:lang='und'>call_hook</code> below,
+a piece of code at the end of a coroutine:</dd><p class="pad"></p>
+
+<dd>set P0,
+P5 # get the real coroutine invokecc # run that code end # terminate the runloop</dd><p class="pad"></p>
+
+<dt><a name="INTVAL_elements_()"
+><b><code lang='und' xml:lang='und'>INTVAL elements ()</b></code></a></dt><p class="pad"></p>
+
+<dd>Return much,
+we don&#39;t know.</dd><p class="pad"></p>
+
+<dd>*/</dd><p class="pad"></p>
+
+<pre lang='und' xml:lang='und'>    INTVAL elements () {
+        return (2^31) &#45; 1;
+    }
+
+    PMC* get_iter () {
+        if (PObj_get_FLAGS(SELF) &#38; PObj_private3_FLAG) {
+            struct Parrot_coro * sub = PMC_coro(SELF);
+            PMC *ret = pmc_new(INTERP, enum_class_Coroutine);
+            struct Parrot_coro * coro = PMC_coro(ret);
+            coro&#45;&#62;end = sub&#45;&#62;end;
+            coro&#45;&#62;address = sub&#45;&#62;address;
+
+            PObj_get_FLAGS(ret) |= PObj_private1_FLAG; /* fixup done */
+            PObj_get_FLAGS(ret) &#38;= ~PObj_private3_FLAG;
+            PObj_flag_CLEAR(custom_mark, SELF);
+            return ret;
+        }
+        return SELF;
+    }
+
+    INTVAL get_bool () {
+        return 1;
+    }</pre>
+
+<dd>/*</dd><p class="pad"></p>
+
+<dt><a name="void_mark()"
+><b><code lang='und' xml:lang='und'>void mark()</b></code></a></dt><p class="pad"></p>
+
+<dd>Marks the coroutine as live.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="HISTORY"
+>HISTORY <a href='#_top'><img alt='^' border=0 src='../../resources/up.gif'></a></a></h1>
+
+<p>Initial version by Melvin on 2002/06/6.</p>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>

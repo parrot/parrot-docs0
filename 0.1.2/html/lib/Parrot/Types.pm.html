@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+    "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>  
+    <HEAD>
+        <TITLE>Basic types for Parrot</TITLE>
+        <LINK REL="stylesheet" TYPE="text/css" 
+            HREF="../../../resources/perl.css" 
+            TITLE="Default CSS2" media="screen">
+    </HEAD>
+    <BODY> 
+        <A NAME="_top"></A>
+        <TABLE CELLSPACING="0" WIDTH="730">
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2" CLASS="BANNER">parrotcode: <SPAN CLASS="title">Basic types for Parrot</SPAN></TD>
+            </TR>
+            <TR>
+                <TD WIDTH="100%" COLSPAN="2"  ID="NAV" STYLE="border-bottom: 1px solid #191970;">
+                    <a href="../../../html/index.html">Contents</a> | <a href="../../../html/perl.html">Perl Modules</a>
+                </TD>
+            </TR>
+        </TABLE>
+        <DIV CLASS="pod">
+
+<h1><a name="NAME"
+>NAME <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p>Parrot::Types &#45; Basic types for Parrot</p>
+
+<h1><a name="SYNOPSIS"
+>SYNOPSIS <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<pre lang='und' xml:lang='und'>  use Parrot::Types;
+
+  $opcode = pack_op($opnumber) . pack_arg(&#34;I&#34;, $ireg) . ...</pre>
+
+<h1><a name="DESCRIPTION"
+>DESCRIPTION <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<p><code lang='und' xml:lang='und'>Parrot::Types</code> provides a collection of functions for packing and unpacking values of the various Parrot types.</p>
+
+<p>It is used in <em lang='und' xml:lang='und'><a href="../../build_tools/pbc2c.pl.html">build_tools/pbc2c.pl</a></em>.</p>
+
+<h2><a name="Functions"
+>Functions <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h2>
+
+<p>The following functions are exported:</p>
+
+<dl>
+<dt><a name="sizeof($type)"
+><b><code lang='und' xml:lang='und'>sizeof($type)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the size of the specified type.</dd><p class="pad"></p>
+
+<dt><a name="pack_byte($value)"
+><b><code lang='und' xml:lang='und'>pack_byte($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified bit&#45;string value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="pack_intval($int)"
+><b><code lang='und' xml:lang='und'>pack_intval($int)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified integer value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="pack_floatval($value)"
+><b><code lang='und' xml:lang='und'>pack_floatval($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified float value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="pack_sv($value)"
+><b><code lang='und' xml:lang='und'>pack_sv($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified <code lang='und' xml:lang='und'><a href='String.pm.html'>Parrot::String</a></code> value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="pack_key($value)"
+><b><code lang='und' xml:lang='und'>pack_key($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified <code lang='und' xml:lang='und'><a href='Key.pm.html'>Parrot::Key</a></code> value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="pack_op($value)"
+><b><code lang='und' xml:lang='und'>pack_op($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified op value packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="unpack_byte($value)"
+><b><code lang='und' xml:lang='und'>unpack_byte($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed bit&#45;string value.</dd><p class="pad"></p>
+
+<dt><a name="unpack_intval($value)"
+><b><code lang='und' xml:lang='und'>unpack_intval($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed integer value.</dd><p class="pad"></p>
+
+<dt><a name="unpack_floatval($value)"
+><b><code lang='und' xml:lang='und'>unpack_floatval($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed float value.</dd><p class="pad"></p>
+
+<dt><a name="unpack_op($value)"
+><b><code lang='und' xml:lang='und'>unpack_op($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed op value.</dd><p class="pad"></p>
+
+<dt><a name="unpack_ops($value)"
+><b><code lang='und' xml:lang='und'>unpack_ops($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed op values.</dd><p class="pad"></p>
+
+<dt><a name="shift_byte($string)"
+><b><code lang='und' xml:lang='und'>shift_byte($string)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed bit&#45;string value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="shift_intval($value)"
+><b><code lang='und' xml:lang='und'>shift_intval($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed integer value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="shift_floatval($value)"
+><b><code lang='und' xml:lang='und'>shift_floatval($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed float value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="shift_sv($value)"
+><b><code lang='und' xml:lang='und'>shift_sv($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed <code lang='und' xml:lang='und'><a href='String.pm.html'>Parrot::String</a></code> value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="shift_key($value)"
+><b><code lang='und' xml:lang='und'>shift_key($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed <code lang='und' xml:lang='und'><a href='Key.pm.html'>Parrot::Key</a></code> value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="shift_op($value)"
+><b><code lang='und' xml:lang='und'>shift_op($value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed op value from the specified string, unpacks and returns it.</dd><p class="pad"></p>
+
+<dt><a name="pack_arg($type,_$value)"
+><b><code lang='und' xml:lang='und'>pack_arg($type, $value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Returns the specified value of type <code lang='und' xml:lang='und'>$type</code> packed into a sequence of bytes.</dd><p class="pad"></p>
+
+<dt><a name="unpack_arg($type,_$value)"
+><b><code lang='und' xml:lang='und'>unpack_arg($type, $value)</b></code></a></dt><p class="pad"></p>
+
+<dd>Unpacks and returns the specified packed value of type <code lang='und' xml:lang='und'>$type</code>.</dd><p class="pad"></p>
+
+<dt><a name="shift_arg($type,_$string)"
+><b><code lang='und' xml:lang='und'>shift_arg($type, $string)</b></code></a></dt><p class="pad"></p>
+
+<dd>Removes a packed value of the specified type from the string, unpacks and returns it.</dd><p class="pad"></p>
+</dl>
+
+<h1><a name="SEE_ALSO"
+>SEE ALSO <a href='#_top'><img alt='^' border=0 src='../../../resources/up.gif'></a></a></h1>
+
+<dl>
+<dt><a name="Parrot::Key"
+><b><code lang='und' xml:lang='und'><a href='Key.pm.html'>Parrot::Key</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::String"
+><b><code lang='und' xml:lang='und'><a href='String.pm.html'>Parrot::String</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::PackFile"
+><b><code lang='und' xml:lang='und'><a href='PackFile.pm.html'>Parrot::PackFile</a></b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::ConstTable"
+><b><code lang='und' xml:lang='und'>Parrot::ConstTable</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="Parrot::Constant"
+><b><code lang='und' xml:lang='und'>Parrot::Constant</b></code></a></dt><p class="pad"></p>
+
+<dt><a name="build_tools/pbc2c.pl"
+><em lang='und' xml:lang='und'><a href="../../build_tools/pbc2c.pl.html">build_tools/pbc2c.pl</a></em></a></dt><p class="pad"></p>
+</dl>
+        </DIV>
+        <P>
+        <TABLE BORDER="0" WIDTH="730" CELLSPACING="0" CELLPADDING="0">
+            <TR ALIGN="RIGHT">
+                <TD WIDTH="590" VALIGN="MIDDLE">
+                    <BR>
+                    <DIV CLASS="FOOTER">
+                        <DIV ALIGN="LEFT">
+                        </DIV>
+                    </DIV>
+                </TD>
+                <TD VALIGN="middle" ALIGN="center">
+                    <IMG BORDER=0
+                        SRC="../../../resources/parrot.small.png" 
+                        ALT="parrot">
+                </TD>
+            </TR>
+        </TABLE>
+    </BODY>
+</HTML>
